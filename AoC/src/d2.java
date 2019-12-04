@@ -1,8 +1,7 @@
 public class d2
 {
     /*
-
-
+    done...
      */
     public static int runC(int noun,int verb)
     {
@@ -12,6 +11,7 @@ public class d2
         int pos=0;
         while (true)
         {
+
             int d = td[pos];
             if (d==99) break;
             //System.out.println(td[pos] + "," + td[pos+1] + "," + td[pos+2] + "," + td[pos+3]);
@@ -28,6 +28,7 @@ public class d2
             pos+=4;
         }
         //f(td);
+
         return td[0];
     }
     public static void f(int []d)
