@@ -28,6 +28,7 @@ public class d2
             pos+=4;
         }
         //f(td);
+        
         return td[0];
     }
     public static void f(int []d)
