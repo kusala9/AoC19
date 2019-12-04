@@ -2,21 +2,8 @@
    DOCO:  
 */
 
-import java.util.ArrayList;
-
 public class d4
 {
-    public pear<ArrayList<Integer>,ArrayList<Integer>> nDubz(String s)
-    {
-
-
-        pear<ArrayList<Integer>, ArrayList<Integer>> ret = null;
-        ret.first = new ArrayList<Integer>();
-        ret.second = new ArrayList<Integer>();
-
-
-        return ret;
-    }
     public static int rep(String s)
     {
         int dbl=-1;
