@@ -56,19 +56,19 @@ public class d6
         System.out.println("Hello world.");
         System.out.println("day6....");
         HashMap<String,Integer> M = new HashMap<>();
-//        String []d = ("COM)B" +
-//                ",B)C" +
-//                ",C)D" +
-//                ",D)E" +
-//                ",E)F" +
-//                ",B)G" +
-//                ",G)H" +
-//                ",D)I" +
-//                ",E)J" +
-//                ",J)K" +
-//                ",K)L" +
-//                ",K)YOU" +
-//                ",I)SAN").split(",");
+        String []d = ("COM)B" +
+                ",B)C" +
+                ",C)D" +
+                ",D)E" +
+                ",E)F" +
+                ",B)G" +
+                ",G)H" +
+                ",D)I" +
+                ",E)J" +
+                ",J)K" +
+                ",K)L" +
+                ",K)YOU" +
+                ",I)SAN").split(",");
 //        String []d = ("COM)B," +
 //                "B)C," +
 //                "C)D," +
@@ -80,7 +80,7 @@ public class d6
 //                "E)J," +
 //                "J)K," +
 //                "K)L").split(",");
-        String []d = d6data.dat.split(",");
+        //String []d = d6data.dat.split(",");
 
         P com = new P("COM");
         k.put("COM",com);
