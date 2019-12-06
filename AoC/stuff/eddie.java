@@ -8,7 +8,7 @@ public class eddie
     {
         IMMEDIATE,POSITION
     } // ha ha, don't need these.... one is the same as the other.
-    
+
     int []td ;
     private mode M;
     public void setMode(mode m)
