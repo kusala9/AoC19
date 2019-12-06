@@ -56,19 +56,19 @@ public class d6
         System.out.println("Hello world.");
         System.out.println("day6....");
         HashMap<String,Integer> M = new HashMap<>();
-        String []d = ("COM)B" +
-                ",B)C" +
-                ",C)D" +
-                ",D)E" +
-                ",E)F" +
-                ",B)G" +
-                ",G)H" +
-                ",D)I" +
-                ",E)J" +
-                ",J)K" +
-                ",K)L" +
-                ",K)YOU" +
-                ",I)SAN").split(",");
+//        String []d = ("COM)B" +
+//                ",B)C" +
+//                ",C)D" +
+//                ",D)E" +
+//                ",E)F" +
+//                ",B)G" +
+//                ",G)H" +
+//                ",D)I" +
+//                ",E)J" +
+//                ",J)K" +
+//                ",K)L" +
+//                ",K)YOU" +
+//                ",I)SAN").split(",");
 //        String []d = ("COM)B," +
 //                "B)C," +
 //                "C)D," +
@@ -80,7 +80,7 @@ public class d6
 //                "E)J," +
 //                "J)K," +
 //                "K)L").split(",");
-        //String []d = d6data.dat.split(",");
+        String []d = d6data.dat.split(",");
 
         P com = new P("COM");
         k.put("COM",com);
@@ -110,21 +110,17 @@ public class d6
             P root = new P(s);
             printRoute("SAN","COM","",0);
             printRoute("YOU","COM","",0);
+            pr(root,0);
 
 
         }
         System.out.println(roots.size() + " td=" + td + " id=" + id + "=" + (td+id) );
 
-//        for (String s:orbits.keySet())
-//        {
-//            String o = "";
-//            ArrayList<String> k = orbits.get(s);
-//            for (String contents:k)
-//            {
-//                o+="," + contents;
-//            }
-//            System.out.println(s + "->" + o);
-//        }
+    }
+
+    private void bldTree(P root)
+    {
+
     }
 
     private static void printRoute(String srch,String root,String path,int i)
@@ -163,10 +159,6 @@ public class d6
 
     private static int td = 0;
     private static int id = 0;
-    private static void bldTree(P root)
-    {
-
-    }
 
     private static void adupp2(String s,int l)
     {
@@ -180,17 +172,6 @@ public class d6
                 td+=l;
                 adupp2(p,l+1);
             }
-        }
-    }
-
-    private static void adupp(P com,int l)
-    {
-        System.out.println(l + ": " + com.nm);
-        id++;
-        for (P p:com.o)
-        {
-            td+=l;
-            adupp(p,l+1);
         }
     }
 
