@@ -111,16 +111,25 @@ public class d6
             printRoute("SAN","COM","",0);
             printRoute("YOU","COM","",0);
             pr(root,0);
-
-
+            P r = bldTree(root);
+            pr(r,0);
         }
         System.out.println(roots.size() + " td=" + td + " id=" + id + "=" + (td+id) );
 
     }
 
-    private void bldTree(P root)
+    private static P bldTree(P root)
     {
-
+        if (orbits.containsKey(root.nm))
+        {
+            for (String p:orbits.get(root.nm))
+            {
+                P p2 = new P(p);
+                root.o.add(p2);
+                bldTree(p2);
+            }
+        }
+        return root;
     }
 
     private static void printRoute(String srch,String root,String path,int i)
