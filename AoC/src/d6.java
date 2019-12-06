@@ -29,6 +29,7 @@ public class d6
             String []ent = d[i].split("\\)");
             System.out.println("-> " + ent[0] + ":" + ent[1]);
 
+
         }
 
 
