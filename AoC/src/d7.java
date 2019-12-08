@@ -35,8 +35,8 @@ public class d7
             inps[0] = phases[i];
             System.out.println(pr(phases) + ":" + pr(inps) + ": Starting");
             eddie2 E = new eddie2(prog.clone());
-            E.dump();
-            E.setDebug(true);
+            //E.dump();
+            //E.setDebug(true);
             E.setI(inps.clone());
             try
             {
@@ -82,33 +82,33 @@ public class d7
         System.out.println(runE(tp2,inps2));
 
 
-//        int []tp3 = {3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0};
-//        int []inps3_1 = {1,0,4,3,0};
-//        int []inps3_2 = {1,0,4,3,1};
-//        int []inps3_3 = {1,0,4,3,2};
-//        System.out.println(runE(tp3,inps3_1));
-//        System.out.println(runE(tp3,inps3_2));
-//        System.out.println(runE(tp3,inps3_3));
+        int []tp3 = {3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0};
+        int []inps3_1 = {1,0,4,2,3};
+        int []inps3_2 = {2,0,4,3,1};
+        int []inps3_3 = {1,0,4,3,2};
+        System.out.println(runE(tp3.clone(),inps3_1.clone()));
+        System.out.println(runE(tp3.clone(),inps3_2.clone()));
+        System.out.println(runE(tp3.clone(),inps3_3.clone()));
 
 
-        int []inps3_1 = {0,0,0,0,5};
-        int []inps3_2 = {0,0,0,0,5};
-        runE(d7.clone(),inps3_1.clone());
-        runE(d7.clone(),inps3_2.clone());
+//        int []inps3_1 = {0,0,0,0,5};
+//        int []inps3_2 = {0,0,0,0,5};
+//        runE(d7.clone(),inps3_1.clone());
+//        runE(d7.clone(),inps3_2.clone());
 
 
-        int []phases = {3,1,2,4,0};
-        int max=0;
-        int min=100000;
-        for (int c=0;c<99999;c++)
-        {
-            int []iv = ivfromI(c);
-            int ret = runE(d7,iv);
-            if (ret>max) max=ret;
-            if (ret<min) min=ret;
-            System.out.println(String.format("%05d",c) + ": CODE=>" + ret);
-        }
-        System.out.println("max=" + max + " min=" + min);
+//        int []phases = {3,1,2,4,0};
+//        int max=0;
+//        int min=100000;
+//        for (int c=0;c<99999;c++)
+//        {
+//            int []iv = ivfromI(c);
+//            int ret = runE(d7,iv);
+//            if (ret>max) max=ret;
+//            if (ret<min) min=ret;
+//            System.out.println(String.format("%05d",c) + ": CODE=>" + ret);
+//        }
+//        System.out.println("max=" + max + " min=" + min);
 
 
 
