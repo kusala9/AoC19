@@ -14,7 +14,7 @@ public class d7
         if (n == 1)
         {
             //printArray(elements, delimiter);
-            System.out.println("->" );
+            //System.out.println("->" );
             perms.add(elements.clone());
         }
         else
@@ -130,18 +130,28 @@ public class d7
 //        runE(d7.clone(),inps3_2.clone());
 
 
-//        int []phases = {3,1,2,4,0};
-//        int max=0;
-//        int min=100000;
-//        for (int c=0;c<99999;c++)
-//        {
-//            int []iv = ivfromI(c);
-//            int ret = runE(d7,iv);
-//            if (ret>max) max=ret;
-//            if (ret<min) min=ret;
-//            System.out.println(String.format("%05d",c) + ": CODE=>" + ret);
-//        }
-//        System.out.println("max=" + max + " min=" + min);
+        int []phases = {3,1,2,4,0};
+        int max=0;
+        int min=100000;
+        int maxi = 0;
+        int mini = 0;
+        for (int c=0;c<perms.size();c++)
+        {
+            int []iv = perms.get(c);
+            int ret = runE(d7.clone(),iv.clone());
+            if (ret>max)
+            {
+                maxi=c;
+                max=ret;
+            }
+            if (ret<min)
+            {
+                mini=c;
+                min=ret;
+            }
+            System.out.println(String.format("%05d",c) + ": CODE=>" + ret);
+        }
+        System.out.println("max=" + max + " min=" + min + " maxc=" + pr(perms.get(maxi)));
 
 
 
