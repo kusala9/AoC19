@@ -49,8 +49,16 @@ public class eddie2
 
     private int vR(int p,int mode)
     {
-        if (mode ==0) return td[td[p]];
-        else return td[p];
+        if (mode ==0)
+        {
+            log(mode + "   -> " + pos + ":" + mode + " fetching contents of " + td[p] + "=" + td[td[p]]);
+            return td[td[p]];
+        }
+        else
+        {
+            log(mode + "   -> " + pos + ":" + mode + " Fetching contents of " + p + "=" + td[p]);
+            return td[p];
+        }
     }
     private void sR(int pos,int val,int mode)
     {
@@ -67,23 +75,40 @@ public class eddie2
         else return p;
     }
 
-
     private BufferedReader R = new BufferedReader(new InputStreamReader(System.in));
     private void log(String msg)
     {
-        if (debug) System.out.println("LOG:: " + msg);
+        if (!debug) return ;
+        System.out.print(pos + ": LOG:: " + msg + "(");
+        for (int i=0;i<8;i++)
+        {
+            if ((pos+i)<td.length)
+            {
+                int n = pos+i;
+                //System.out.print(" "  + n+ "=" + td[pos+i]);
+                System.out.print(" "+  td[pos+i]);
+
+                //                if (td[i]<td.length) System.out.print(" [" + td[td[i]] + "],");
+//                else System.out.print(",");
+            }
+        }
+        System.out.println(")");
     }
+    private int pos;
+    private int []modes;
 
     public int runC(int noun,int verb)
     {
 //        td[1] = noun;
 //        td[2] = verb;
-        int pos=0;
+        pos=0;
+
         while (true)
         {
+            log("Processing Instruction -> " + td[pos]);
             //dump();
             int opcode = td[pos];
-            int []modes = getModes(opcode);
+            modes = getModes(opcode);
             opcode = modes[0];
 
             int n = 0;
@@ -99,6 +124,7 @@ public class eddie2
                 log("ADD");
                 n = 4;
                 int j=vR(pos+1,modes[1]) + vR(pos+2,modes[2]);
+                log("Store -> "+ j + " in " + pos+3 + " m[" + modes[3]);
                 sR(pos+3,j,modes[3]);
             }
             else if (opcode==2)
@@ -106,6 +132,7 @@ public class eddie2
                 log("MULTIPLY");
                 n = 4;
                 int j=vR(pos+1,modes[1]) * vR(pos+2,modes[2]);
+                log("Store -> "+ j + " in " + pos+3 + " m[" + modes[3]);
                 sR(pos+3,j,modes[3]);
             }
             else if (opcode==3)
@@ -113,25 +140,16 @@ public class eddie2
                 log("INPUT");
                 n = 2;
                 int a = v(pos+1,modes[1]);
-                int v;
-                if (inputs==null)
-                {
-                    v = getI();
-                }
-                else
-                {
-                    v=inputs[inputpointer];
-                    inputpointer++;
-                }
+                int v = getI();
                 s(a,v,0);
             }
             else if (opcode == 4)
             {
-                log("LOG");
+                log("OUTPUT");
                 n = 2;
                 int a = v(pos+1,modes[1]);
                 lastoutput = v(a,0);
-                System.out.println("OUTPUT::  ->" + v(a,0) + "<-");
+                log("OUTPUT::  ->" + v(a,0) + "<-");
             }
             else if (opcode == 5) // jump if true.
             {
@@ -139,7 +157,8 @@ public class eddie2
                 log("JUMP IF TRUE " + vR(pos+1,modes[1]));
                 if (vR(pos+1,modes[1])!=0)
                 {
-                    log("JUMP" + vR(pos+2,modes[2]));
+                    log("JUMPING to " + vR(pos+2,modes[2]));
+                    // just to try (jumps are never indirect?)
                     pos = vR(pos+2,modes[2]);
                     continue;
                 }
@@ -158,6 +177,7 @@ public class eddie2
             }
             else if (opcode == 7)  // less than
             {
+                log("LESS THAN");
                 n = 4;
                 int res ;
                 if (  vR(pos+1,modes[1]) < vR(pos+2,modes[2]) ) res = 1 ;
@@ -191,11 +211,10 @@ public class eddie2
         String opc = String.format("%05d",opcode);
         int []ret = new int[4];
         ret[0] = Integer.parseInt(opc.substring(3,5));
-
         ret[1] = Integer.parseInt(opc.substring(2,3));
         ret[2] = Integer.parseInt(opc.substring(1,2));
         ret[3] = Integer.parseInt(opc.substring(0,1));
-        System.out.println("PRC:: " + ret[0] + ":" + ret[1] + "," + ret[2] + "," + ret[3]);
+        log("GETMODES:: " + ret[0] + ":" + ret[1] + "," + ret[2] + "," + ret[3]);
         return ret;
     }
 
@@ -213,17 +232,29 @@ public class eddie2
 
     private int getI()
     {
-        System.out.print("input a num => ");
-        try
+        if (inputs==null)
         {
-            String s = R.readLine();
-            return Integer.parseInt(s);
+            try
+            {
+                System.out.print("input a num => ");
+                String s = R.readLine();
+                return Integer.parseInt(s);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                System.exit(1);
+            }
         }
-        catch (IOException e)
+        else
         {
-            e.printStackTrace();
-            System.exit(1);
+            int v = inputs[inputpointer];
+            inputpointer++;
+            log("Input ==>" + v + "<==");
+            return v;
         }
+
+
         return 0;
     }
 
