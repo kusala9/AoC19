@@ -4,6 +4,7 @@
 
 public class d7
 {
+
     public static void main(String []a)
     {
         System.out.println("hello world...");
@@ -14,13 +15,16 @@ public class d7
         int []tp = {3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0};
         int []I = {8,2,3};
 
-        eddie2 E = new eddie2(simple_input.clone());
-        E.setI(I);
+        for (int i=0;i<3;i++)
+        {
+            System.out.println("====================");
+            eddie2 E = new eddie2(simple_input.clone());
+            E.setI(I);
+            int ret = E.runC(0,0);
+            System.out.println("lastoutput=" + E.getlastoutpout());
+            I[0] = E.getlastoutpout();
+        }
 
-        int ret = E.runC(0,0);
-
-
-        System.out.println("lastoutput=" + E.getlastoutpout());
 
 
     }
