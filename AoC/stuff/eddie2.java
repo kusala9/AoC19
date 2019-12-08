@@ -4,6 +4,19 @@ import java.io.InputStreamReader;
 
 public class eddie2
 {
+    private int connectedto = 0;
+
+    // where this one gets its inputs from...
+    public void setConnected(int i)
+    {
+        connectedto=i;
+    }
+    private boolean manual = false;
+    public void setManual(boolean b)
+    {
+        manual=b;
+    }
+    private int nm = 0;
     private boolean debug=false;
     private boolean uselastoutput=false;
     private int lastoutput = 0;
@@ -41,8 +54,9 @@ public class eddie2
         td = p;
     }
 
-    public eddie2(int []prog)
+    public eddie2(int name,int []prog)
     {
+        nm = name;
         M = mode.POSITION;
         setProg(prog);
     }
@@ -79,7 +93,7 @@ public class eddie2
     private void log(String msg)
     {
         if (!debug) return ;
-        System.out.print(pos + ": LOG:: " + msg + "(");
+        System.out.print(nm + ":" + pos + ": LOG:: " + msg + "(");
         for (int i=0;i<8;i++)
         {
             if ((pos+i)<td.length)
@@ -221,13 +235,15 @@ public class eddie2
     public void dump()
     {
         System.out.println("==============DUMP============");
+        int rt=0;
         for (int i=0;i<td.length;i++)
         {
+            rt+=td[i];
             if (i>0) System.out.print(" ");
             System.out.print(td[i]);
             if ((i+1)%20 == 0) System.out.println();
         }
-        System.out.println("\n==============DUMP============");
+        System.out.println("\n" + rt + "==============DUMP============");
     }
 
     private int getI()

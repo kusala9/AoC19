@@ -66,21 +66,11 @@ public class d7
         for (int i=0;i<phases.length;i++)
         {
             inps[0] = phases[i];
-            System.out.println(pr(phases) + ":" + pr(inps) + ": Starting");
-            eddie2 E = new eddie2(prog.clone());
+            eddie2 E = new eddie2(i,prog.clone());
             //E.dump();
             //E.setDebug(true);
             E.setI(inps.clone());
-            try
-            {
-                E.runC(0,0);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                System.exit(1);
-            }
-            System.out.println(pr(phases) + ":" + pr(inps) + ": lastoutput=" + E.getlastoutpout());
+            E.runC(0,0);
             inps[1] = E.getlastoutpout();
             ret = E.getlastoutpout();
         }
