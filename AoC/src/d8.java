@@ -14,6 +14,7 @@ public class d8
             for (int k=0;k<25;k++)
             {
                 if (im[k][j] == 1) System.out.print("X");
+                //else if (im[k][j]==0) System.out.print("0");
                 else System.out.print(" ");
                 //System.out.print(im[k][j]);
             }
@@ -22,19 +23,31 @@ public class d8
         System.out.println("===========================");
 
     }
-    public static void pr2(int [][]im)
+    public static void pr2(int [][]im,String [][]t)
     {
         System.out.println("===========================");
         for (int j=0;j<6;j++)
         {
             for (int k=0;k<25;k++)
             {
-                System.out.print(im[k][j] + ",");
+                System.out.print(im[k][j] + "[" + t[k][j] + "]");
             }
             System.out.println();
         }
         System.out.println("===========================");
 
+    }
+
+    public static int [][] initI(int [][]im)
+    {
+        for (int j=0;j<6;j++)
+        {
+            for (int k=0;k<25;k++)
+            {
+                im[k][j] = -1;
+            }
+        }
+        return im;
     }
     public static String [][] init(String [][]im)
     {
@@ -79,7 +92,7 @@ public class d8
                 }
             }
             layers.add(l.clone());
-            System.out.println("L" + i + " n0=" + nn0 + " n1=" + nn1 + " n2=" + nn2);
+            //System.out.println("L" + i + " n0=" + nn0 + " n1=" + nn1 + " n2=" + nn2);
             n0.add(nn0);
             n1.add(nn1);
             n2.add(nn2);
@@ -90,10 +103,12 @@ public class d8
             }
         }
         int [][]finalLayer = new int[25][6];
+        finalLayer = initI(finalLayer);
+
         String [][]trace = new String[25][6];
         trace = init(trace);
 
-        for (int i=0;i<3;i++)
+        for (int i=0;i<100;i++)
         {
             int [][]l = layers.get(i);
             for (int j=0;j<6;j++)
@@ -101,13 +116,16 @@ public class d8
                 for (int k=0;k<25;k++)
                 {
                     if (l[k][j] != 2)
-                        finalLayer[k][j]+=l[k][j];
-                    trace[k][j]+=" " + l[k][j];
+                    {
+                        if (finalLayer[k][j]<0) finalLayer[k][j]=l[k][j];
+                    }
+                    trace[k][j]+=l[k][j];
                 }
             }
         }
         System.out.println("FINISHED");
         pr(finalLayer);
+        //pr2(finalLayer,trace);
     }
 
 
