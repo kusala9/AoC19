@@ -77,6 +77,66 @@ public class d7
         return ret;
     }
 
+    public static int runA(int []prog, int []phases)
+    {
+        int ret =0;
+        int []inps = {0,0};
+        int []runfrom = {0,0,0,0,0};
+
+        int []inps1 = {phases[0],0};
+        int []inps2 = {phases[1],0};
+        int []inps3 = {phases[2],0};
+        int []inps4 = {phases[3],0};
+        int []inps5 = {phases[4],0};
+        eddie3 amp1 = new eddie3(1,prog.clone());
+        eddie3 amp2 = new eddie3(2,prog.clone());
+        eddie3 amp3 = new eddie3(3,prog.clone());
+        eddie3 amp4 = new eddie3(4,prog.clone());
+        eddie3 amp5 = new eddie3(5,prog.clone());
+
+//        amp1.setDebug(true);
+//        amp2.setDebug(true);
+//        amp3.setDebug(true);
+//        amp4.setDebug(true);
+//        amp5.setDebug(true);
+
+        for (int i=0;i<20;i++)
+        {
+            amp1.setI(inps1);
+            runfrom[0] = amp1.runC(runfrom[0]);
+            inps2[1]   = amp1.getlastoutpout();
+
+            amp2.setI(inps2);
+
+            runfrom[1] = amp2.runC(runfrom[1]);
+            inps3[1]   = amp2.getlastoutpout();
+
+            amp3.setI(inps3);
+
+            runfrom[2] = amp3.runC(runfrom[2]);
+            inps4[1]   = amp3.getlastoutpout();
+
+            amp4.setI(inps4);
+
+            runfrom[3] = amp4.runC(runfrom[3]);
+            inps5[1]   = amp4.getlastoutpout();
+
+            amp5.setI(inps5);
+
+            runfrom[4] = amp5.runC(runfrom[4]);
+            inps1[1]   = amp5.getlastoutpout();
+
+            System.out.println("FINISHED INTERATION" + " " + amp1.ck() +" " +  amp2.ck() + " " + amp3.ck() +" " +  amp4.ck() + " " + amp5.ck());
+
+            if (amp1.isDun()&&amp2.isDun()&&amp3.isDun()&&amp4.isDun()&&amp5.isDun())
+            {
+                System.out.println("FINISHED ALL AMPS => " + amp5.getlastoutpout());
+                ret = amp5.getlastoutpout();
+                break;
+            }
+        }
+        return ret;
+    }
     public static void main(String []a)
     {
         System.out.println("hello world...");
@@ -93,34 +153,11 @@ public class d7
                 1002,9,2,9,
                 4,9,99,3,9,102,2,9,9,101,5,9,9,4,9,99,3,9,102,3,9,9,101,5,9,9,1002,9,2,9,101,4,9,9,4,9,99,3,9,102,5,9,9,1001,9,3,9,4,9,99,3,9,1001,9,4,9,102,5,9,9,1001,9,5,9,1002,9,2,9,101,2,9,9,4,9,99,3,9,101,1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,2,9,4,9,99,3,9,1001,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,9,4,9,99,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,99,3,9,1001,9,1,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,101,2,9,9,4,9,99};
 
-        int []d = {3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0};
-        int []simple_input = new int[]{3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99};
+        int []d72 = {3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5};
+        int []snip = {5,6,7,8,9};
 
-        int []tp = {3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0};
-        int []inps2 = {0,1,2,3,4};
+        par(5,snip);
 
-        int []tp2 = {3,23,3,24,1002,24,10,24,1002,23,-1,23,101,5,23,23,1,24,23,23,4,23,99,0,0};
-        int []inps = {4,3,2,1,0};
-
-        System.out.println(runE(tp2,inps2));
-
-        par(5,inps);
-        int []tp3 = {3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0};
-        int []inps3_1 = {1,0,4,2,3};
-        int []inps3_2 = {2,0,4,3,1};
-        int []inps3_3 = {1,0,4,3,2};
-        System.out.println(runE(tp3.clone(),inps3_1.clone()));
-        System.out.println(runE(tp3.clone(),inps3_2.clone()));
-        System.out.println(runE(tp3.clone(),inps3_3.clone()));
-
-
-//        int []inps3_1 = {0,0,0,0,5};
-//        int []inps3_2 = {0,0,0,0,5};
-//        runE(d7.clone(),inps3_1.clone());
-//        runE(d7.clone(),inps3_2.clone());
-
-
-        int []phases = {3,1,2,4,0};
         int max=0;
         int min=100000;
         int maxi = 0;
@@ -128,7 +165,7 @@ public class d7
         for (int c=0;c<perms.size();c++)
         {
             int []iv = perms.get(c);
-            int ret = runE(d7.clone(),iv.clone());
+            int ret = runA(d7.clone(),iv.clone());
             if (ret>max)
             {
                 maxi=c;
@@ -142,9 +179,6 @@ public class d7
             System.out.println(String.format("%05d",c) + ": CODE=>" + ret);
         }
         System.out.println("max=" + max + " min=" + min + " maxc=" + pr(perms.get(maxi)));
-
-
-
     }
 
 }
