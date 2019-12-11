@@ -3,17 +3,28 @@ import java.util.HashMap;
 
 public class d10
 {
+    public static int gcf(int num1,int num2)
+    {
+        for(int i = 1; i <= num1 && i <= num2; i++)
+        {
+            if(num1%i==0 && num2%i==0) return i;
+        }
+        return 1;
+    }
     public static boolean isM(pear<Integer,Integer> e1,pear<Integer,Integer> e2)
     {
         boolean ret = false;
 
         int dx = e1.first - e2.first;
         int dy = e1.second - e2.second;
+        int g = gcf(dx,dy);
+        if (e1 == e2) return true;
 
-        if (dx==0 && dy == 0) return true;
-        if (dx==0) return true;
-        if (dy==0) return true;
-        if (dx%dy == 0) return true;
+        // go from e1 to e2.
+        while (e1 != e2)
+        {
+
+        }
 
         return ret;
     }
