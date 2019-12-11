@@ -7,6 +7,8 @@ public class d10
     {
         int n1 = Math.abs(no1);
         int n2 = Math.abs(no2);
+        if (n1==0) return n2;
+        if (n2==0) return n1;
         int gcd = 1;
         for (int i = 1; i <= n1 && i <= n2; i++)
         {
@@ -23,10 +25,10 @@ public class d10
 
         int dx = e2.first - e1.first;
         int dy = e2.second - e1.second;
-        if (e1 == e2) return true;
-        int g = 0;
-        if (dx==0||dy==0) g=1;
-        else g = gcf(dx,dy);
+        if (e1.equals(e2)) return true;
+//        int g = 0;
+//        if (dx==0||dy==0) g=1;
+        int g = gcf(dx,dy);
 
         if ( (dx!=0 && dy!=0 ) && (g ==1))
         {
@@ -66,7 +68,7 @@ public class d10
             {
                 if (s.charAt(j)=='#')
                 {
-                    System.out.println("A at(" + i + "," + j + ")");
+                    //System.out.println("A at(" + i + "," + j + ")");
                     p = new pear<>(j,i);
                     m3.put(p,true);
                     tot++;
@@ -85,13 +87,13 @@ public class d10
             {
                 if (isM(e1,e2,m3))
                 {
-                    System.out.println(e1 + "Match-" + e2);
+                    //System.out.println(e1 + "Match-" + e2);
                     if (e1.equals(trace)) tracemap.put(e2,true);
                     cnt++;
                 }
                 else
                 {
-                    System.out.println(e1 + " Not match-" + e2);
+                    //System.out.println(e1 + " Not match-" + e2);
                     if (e1.equals(trace)) tracemap.put(e2,false);
                 }
             }
@@ -112,7 +114,8 @@ public class d10
                     p = new pear<>(j,i);
                     if (tracemap.containsKey(p))
                     {
-                        if (tracemap.get(p)==true) System.out.print("X");
+                        if (p.equals(trace)) System.out.print("O");
+                        else if (tracemap.get(p)==true) System.out.print("X");
                         else System.out.print("x");
                     }
                     else
