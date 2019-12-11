@@ -11,22 +11,23 @@ public class d10
         }
         return 1;
     }
-    public static boolean isM(pear<Integer,Integer> e1,pear<Integer,Integer> e2)
+    public static boolean isM(pear<Integer,Integer> e1,pear<Integer,Integer> e2,HashMap<pear<Integer,Integer>,Boolean> m3)
     {
         boolean ret = false;
 
-        int dx = e1.first - e2.first;
-        int dy = e1.second - e2.second;
+        int dx = e2.first - e1.first;
+        int dy = e2.second - e1.second;
         int g = gcf(dx,dy);
         if (e1 == e2) return true;
+        if (g==1) return true;
 
         // go from e1 to e2.
         while (e1 != e2)
         {
-
+            e1 = new pear<Integer,Integer>(e1.first+dx,e1.second+dy);
+            if (m3.containsKey(e1)) return false;
         }
-
-        return ret;
+        return true;
     }
     public static void main(String []a)
     {
@@ -54,7 +55,7 @@ public class d10
             System.out.println("Checking " + e1);
             for (pear<Integer,Integer> e2: m3.keySet())
             {
-                if (isM(e1,e2))
+                if (isM(e1,e2,m3))
                 {
                     System.out.println("Match => " + e1 + "-" + e2);
                 }
