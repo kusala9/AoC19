@@ -3,6 +3,29 @@ import java.util.HashMap;
 
 public class d10
 {
+    public static int getQ(pear<Integer,Integer> st,pear<Integer,Integer> en)
+    {
+        int dx = en.first - st.first;
+        int dy = en.second - st.second;
+        if (dx>=0)
+        {
+            if (dy >= 0)
+                return 1;
+            else
+                return 4;
+        }
+        else
+        {
+            if (dy>=0)
+            {
+                return 3;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+    }
     public static int gcf(int no1,int no2)
     {
         int n1 = Math.abs(no1);
@@ -54,7 +77,7 @@ public class d10
     }
     public static void main(String []a)
     {
-        ArrayList<String> m = d10d.getd2();
+        ArrayList<String> m = d10d.getd5();
         pear<Integer,Integer> p = new pear<Integer,Integer>(3,4);
         HashMap<String,Integer> m2 = new HashMap<>();
         HashMap<pear<Integer,Integer>,Boolean> m3 = new HashMap<>();
@@ -77,7 +100,7 @@ public class d10
         }
 
         int max=0;
-        pear<Integer,Integer> trace = new pear<Integer,Integer>(6,3);
+        pear<Integer,Integer> trace = new pear<Integer,Integer>(17,22);
         HashMap<pear<Integer,Integer>,Boolean> tracemap = new HashMap<>();
 
         for (pear<Integer,Integer> e1: m3.keySet())
@@ -115,7 +138,10 @@ public class d10
                     if (tracemap.containsKey(p))
                     {
                         if (p.equals(trace)) System.out.print("O");
-                        else if (tracemap.get(p)==true) System.out.print("X");
+                        else if (tracemap.get(p)==true)
+                        {
+                            System.out.print(getQ(trace,p));
+                        }
                         else System.out.print("x");
                     }
                     else
