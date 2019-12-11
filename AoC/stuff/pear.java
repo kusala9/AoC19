@@ -23,7 +23,10 @@ public class pear<F, S> {
         this.second = second;
     }
 
-
+    public String toString()
+    {
+        return "(" + this.first.toString() + "," + this.second.toString() + ")";
+    }
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof pear)) {
