@@ -32,7 +32,7 @@ public class d10
     }
     public static void main(String []a)
     {
-        ArrayList<String> m = d10d.getd();
+        ArrayList<String> m = d10d.getd2();
         pear<Integer,Integer> p = new pear<Integer,Integer>(1,0);
         HashMap<String,Integer> m2 = new HashMap<>();
         HashMap<pear<Integer,Integer>,Boolean> m3 = new HashMap<>();
