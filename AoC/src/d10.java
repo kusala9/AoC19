@@ -5,11 +5,12 @@ public class d10
 {
     public static int gcf(int num1,int num2)
     {
+        int g=0;
         for(int i = 1; i <= num1 && i <= num2; i++)
         {
-            if(num1%i==0 && num2%i==0) return i;
+            if(num1%i==0 && num2%i==0) g=i;
         }
-        return 1;
+        return g;
     }
     public static boolean isM(pear<Integer,Integer> e1,pear<Integer,Integer> e2,HashMap<pear<Integer,Integer>,Boolean> m3)
     {
@@ -50,15 +51,23 @@ public class d10
                 }
             }
         }
+
+        int max=0;
         for (pear<Integer,Integer> e1: m3.keySet())
         {
-            System.out.println("Checking " + e1);
+            int cnt=0;
             for (pear<Integer,Integer> e2: m3.keySet())
             {
                 if (isM(e1,e2,m3))
                 {
-                    System.out.println("Match => " + e1 + "-" + e2);
+                    //System.out.println("Match => " + e1 + "-" + e2);
+                    cnt++;
                 }
+            }
+            if (cnt>max)
+            {
+                System.out.println("New Max = " + e1 + "=" + cnt);
+                max=cnt;
             }
         }
 
