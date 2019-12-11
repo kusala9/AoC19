@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.util.HashMap;
 
 public class eddie4
 {
@@ -14,20 +15,24 @@ public class eddie4
         manual=b;
     }
 
+    HashMap<BigInteger,BigInteger> xM = new HashMap<>();
     private int nm = 0;
     private boolean debug=false;
     private boolean uselastoutput=false;
-    private int lastoutput = 0;
-    public int getlastoutpout()
+    private BigInteger lastoutput = new BigInteger("0");
+    public BigInteger getlastoutpout()
     {
         return lastoutput;
     }
-    private int []inputs ;
+
+    private BigInteger []inputs ;
     private int inputpointer = 0;
-    public void setI(int []i)
+
+    public void setI(BigInteger []i)
     {
         inputs=i;
     }
+
     public void setDebug(boolean v)
     {
         debug = v;
@@ -42,11 +47,25 @@ public class eddie4
         return dun;
     }
 
+    public BigInteger bass = new BigInteger("0");
+    public void setBass(BigInteger i)
+    {
+        bass = i;
+    }
     public enum mode
     {
         IMMEDIATE,POSITION
     } // ha ha, don't need these.... one is the same as the other.
 
+    // convo
+    public int x(BigInteger I)
+    {
+        return I.intValue();
+    }
+    public BigInteger X(int i)
+    {
+        return new BigInteger(Integer.toString(i));
+    }
 
     public static BigInteger[]parseprog(String s)
     {
@@ -61,52 +80,154 @@ public class eddie4
     }
 
     // main memory - stores program.
-    int []td ;
+    BigInteger []td;
+    //int []td ;
     private mode M;
     public void setMode(mode m)
     {
         M = m;
     }
 
-    public void setProg(int []p)
+    public BigInteger maxAddress = new BigInteger("0");
+    public void setProg(BigInteger []p)
     {
         td = p;
+        maxAddress = X(td.length);
     }
 
-    public eddie4(int name, int []prog)
+    public eddie4(int name, String prog)
     {
         nm = name;
         M = mode.POSITION;
-        setProg(prog);
+        setProg(parseprog(prog).clone());
     }
 
     // data access functions.
-    private int vR(int p,int mode)
+    private BigInteger Get(BigInteger i)
     {
-        if (mode ==0)
+        if (i.compareTo(maxAddress)==1 || i.compareTo(maxAddress)==0)
         {
-            log(mode + "   -> " + pos + ":" + mode + " fetching contents of " + td[p] + "=" + td[td[p]]);
-            return td[td[p]];
+            if (xM.containsKey(i)) return xM.get(i);
+            else
+            {
+                xM.put(i,new BigInteger("0"));
+                //log("GET: Getting value at " + i + "=" + Z);
+                return Z;
+            }
         }
         else
         {
-            log(mode + "   -> " + pos + ":" + mode + " Fetching contents of " + p + "=" + td[p]);
-            return td[p];
+            //log("GET: Getting value at " + i + "=" + td[x(i)]);
+            return td[x(i)];
         }
     }
-    private void sR(int pos,int val,int mode)
+    private BigInteger get(int i)
     {
-        if (mode==0) td[td[pos]] = val;
-        else td[pos] = val;
+        // these are only really used in mode 2...
+        return Get(X(i));
     }
-    private void s(int pos,int val, int mode)
+    private void p(BigInteger i,BigInteger v)
     {
-        if (mode == 0) td[pos] = val;
+        log("PUT: value=" + v + " in address=" + i);
+        if (i.compareTo(maxAddress)==1 || i.compareTo(maxAddress)==0)
+        {
+            xM.put(i,v);
+        }
+        else
+        {
+            td[x(i)] = v;
+        }
     }
-    private int v(int p, int mode)
+    private void put(int addr, BigInteger v)
     {
-        if (mode ==0) return td[p];
-        else return p;
+        p(X(addr),v);
+    }
+
+    private BigInteger vR(int p,int mode)
+    {
+        log(mode + ": Fetching value mode=" + mode + " address=" + p + "=(" + Get(X(p)) +")");
+        if (mode ==0)
+        {
+            BigInteger vv = get(x(get(p)));
+            //return td[x(td[p])];
+            return vv;
+        }
+        else if (mode==1)
+        {
+            return get(p);
+        }
+        else if (mode==2)
+        {
+            BigInteger ra = get(p);
+            BigInteger address = bass.add(ra);
+            BigInteger x = Get(address);
+            return x;
+        }
+        else
+        {
+            System.out.println("vR: ERROR: Invalid mode=" + mode);
+            System.exit(1);
+        }
+        return null;
+    }
+
+
+    private void sR(int pos,BigInteger val,int mode)
+    {
+        if (mode==0)
+        {
+            p(get(pos),val);
+        }
+        else if (mode==0)
+        {
+            System.exit(1);
+        }
+        else
+        {
+            System.out.println("sR: ERROR: Invalid mode=" + mode);
+            System.exit(1);
+        }
+    }
+    private void s(int pos,BigInteger val, int mode)
+    {
+        if (mode == 0)
+        {
+            put(pos,val);
+        }
+        else if (mode == 1){System.exit(1);}
+        else
+        {
+            System.out.println("s: ERROR: Invalid mode=" + mode);
+            System.exit(1);
+        }
+    }
+
+    private BigInteger v(int p, int mode)
+    {
+        log(mode + "   Now at " + pos + "  M=" + mode + " fetching contents of address " + p + " M=" + mode);
+        if (mode ==0)
+        {
+            log("Simple Fetch: " + p + " m=" + mode);
+            BigInteger k = Get(X(p));
+            return k;
+        }
+        else if (mode==1)
+        {
+            return Get(X(p));
+        }
+        else if (mode==2)
+        {
+            BigInteger ra = td[p];
+            BigInteger address = bass.add(ra);
+            BigInteger x = Get(address);
+            return x;
+        }
+        else
+        {
+            System.out.println("v: ERROR: Invalid mode=" + mode);
+            System.exit(1);
+        }
+        return null;
     }
 
     // input stuff....
@@ -117,26 +238,27 @@ public class eddie4
     private void log(String msg)
     {
         if (!debug) return ;
-        System.out.print(nm + ":" + pos + ": LOG:: " + msg + "(");
-        for (int i=0;i<8;i++)
-        {
-            if ((pos+i)<td.length)
-            {
-                int n = pos+i;
-                //System.out.print(" "  + n+ "=" + td[pos+i]);
-                System.out.print(" "+  td[pos+i]);
-
-                //                if (td[i]<td.length) System.out.print(" [" + td[td[i]] + "],");
-//                else System.out.print(",");
-            }
-        }
-        System.out.println(")");
+        System.out.println(nm + ":" + pos + ": LOG:: " + msg );
+//        for (int i=0;i<8;i++)
+//        {
+//            if ((pos+i)<td.length)
+//            {
+//                int n = pos+i;
+//                //System.out.print(" "  + n+ "=" + td[pos+i]);
+//                System.out.print(" "+  td[pos+i]);
+//
+//                //                if (td[i]<td.length) System.out.print(" [" + td[td[i]] + "],");
+////                else System.out.print(",");
+//            }
+//        }
+        //System.out.println(")");
     }
 
     // global pointer.
     private int pos;
     private int []modes;
-
+    private BigInteger Z = new BigInteger("0");
+    private BigInteger ONE = new BigInteger("1");
     public int runC(int ip)
     {
         pos=ip;
@@ -144,10 +266,11 @@ public class eddie4
         while (true)
         {
             log("Processing Instruction -> " + td[pos]);
-            //dump();
-            int opcode = td[pos];
+            dump();
+            int opcode = x(td[pos]);
             modes = getModes(opcode);
             opcode = modes[0];
+            log("Processing Instruction -> " + td[pos] + " M1=" + modes[1] + " M2=" + modes[2] + " M3=" + modes[3]);
 
             int n = 0;
             if (opcode==99)
@@ -160,87 +283,110 @@ public class eddie4
             //System.out.println(td[pos] + "," + td[pos+1] + "," + td[pos+2] + "," + td[pos+3]);
             if (opcode==1)
             {
-                log("ADD");
+                log("ADD O1=" + td[pos+1] + " O2=" + td[pos+2]);
                 n = 4;
-                int j=vR(pos+1,modes[1]) + vR(pos+2,modes[2]);
-                log("Store -> "+ j + " in " + pos+3 + " m[" + modes[3]);
-                sR(pos+3,j,modes[3]);
+                BigInteger o1 = vR(pos+1,modes[1]);
+                BigInteger o2 = vR(pos+2,modes[2]);
+                BigInteger j  = o1.add(o2);
+                //int j=vR(pos+1,modes[1]) + vR(pos+2,modes[2]);
+                int y=pos+3;
+                log("Store -> "+ j + " in " + y + " m[" + modes[3] + "]");
+                sR(y,j,modes[3]);
             }
             else if (opcode==2)
             {
                 log("MULTIPLY");
                 n = 4;
-                int j=vR(pos+1,modes[1]) * vR(pos+2,modes[2]);
-                log("Store -> "+ j + " in " + pos+3 + " m[" + modes[3]);
+                BigInteger o1 = vR(pos+1,modes[1]);
+                BigInteger o2 = vR(pos+2,modes[2]);
+                BigInteger j  = o1.multiply(o2);
+                //int j=vR(pos+1,modes[1]) * vR(pos+2,modes[2]);
+                log("Store -> "+ j + " in " + pos+3 + " m[" + modes[3] + "]");
                 sR(pos+3,j,modes[3]);
+                dump();
             }
             else if (opcode==3)
             {
                 log("INPUT");
                 n = 2;
-                int a = v(pos+1,modes[1]);
+                BigInteger a = v(pos+1,modes[1]);
                 if (inputpointer==inputs.length)
                 {
                     log("NO INPUTS LEFT -> SUSPENDING AT " + pos + " -->" + this.getlastoutpout() + "<--");
                     inputpointer--;
                     return pos;
                 }
-                int v = getI();
-                s(a,v,0);
+                BigInteger v = getI();
+                s(x(a),v,0);
             }
             else if (opcode == 4)
             {
-                log("OUTPUT");
+                log("OUTPUT mode=" + modes[1] + " pos=" + pos + " Operand=" + get(pos+1));
                 n = 2;
-                int a = v(pos+1,modes[1]);
-                lastoutput = v(a,0);
-                log("OUTPUT::  ->" + v(a,0) + "<-");
+                BigInteger val = vR(pos+1,modes[1]);
+                lastoutput = val;
+                log("OUTPUT::  ->" + lastoutput + "<-");
             }
             else if (opcode == 5) // jump if true.
             {
                 n=3;
                 log("JUMP IF TRUE " + vR(pos+1,modes[1]));
-                if (vR(pos+1,modes[1])!=0)
+
+                BigInteger o1 = vR(pos+1,modes[1]);
+                if (!o1.equals(Z))
                 {
                     log("JUMPING to " + vR(pos+2,modes[2]));
                     // just to try (jumps are never indirect?)
-                    pos = vR(pos+2,modes[2]);
+                    pos = x(vR(pos+2,modes[2]));
                     continue;
                 }
             }
             else if (opcode == 6)
             {
                 n=3;
-                log("JUMP IF FALSE " + vR(pos+1,modes[1]));
-                if (vR(pos+1,modes[1])==0)
+                log("JUMP IF FALSE " + td[pos+1] + " M=" + modes[1] + " to " + td[pos+2]);
+                BigInteger o1 = vR(pos+1,modes[1]);
+                if (o1.equals(Z))
                 {
-                    log("JUMP" + vR(pos+2,modes[2]));
-                    pos = vR(pos+2,modes[2]);
+                    log("JUMPING to " + vR(pos+2,modes[2]));
+                    pos = x(vR(pos+2,modes[2]));
                     continue;
                 }
 
             }
             else if (opcode == 7)  // less than
             {
-                log("LESS THAN");
+                log("LESS THAN " + td[pos+1] + " " + td[pos+2] + ", result in " + td[pos+3]);
                 n = 4;
-                int res ;
-                if (  vR(pos+1,modes[1]) < vR(pos+2,modes[2]) ) res = 1 ;
-                else res = 0;
+                BigInteger res ;
+                BigInteger o1 = vR(pos+1,modes[1]);
+                BigInteger o2 = vR(pos+2,modes[2]);
+                if (  o1.compareTo(o2)==-1 ) res = ONE ;
+                //if (  vR(pos+1,modes[1]) < vR(pos+2,modes[2]) ) res = 1 ;
+                else res = Z;
                 sR(pos+3,res,modes[3]);
             }
             else if (opcode == 8)
             {
-                log("EQUALS");
+                log("EQUALS " + td[pos+1] + " " + td[pos+2] + ", result in " + td[pos+3] );
                 n = 4;
-                int res ;
-                if (  vR(pos+1,modes[1]) == vR(pos+2,modes[2]) ) res = 1 ;
-                else res = 0;
+                BigInteger res ;
+                BigInteger o1 = vR(pos+1,modes[1]);
+                BigInteger o2 = vR(pos+2,modes[2]);
+                if (  o1.compareTo(o2)==0 ) res = ONE ;
+                else res = Z;
                 sR(pos+3,res,modes[3]);
+            }
+            else if (opcode == 9)
+            {
+                BigInteger o1 = vR(pos+1,modes[1]);
+                log("SET BASS => " + o1);
+                n = 2;
+                bass = o1;
             }
             else
             {
-                System.out.println("ERROR: Opcode not found" + opcode);
+                System.out.println("ERROR: Opcode not found ->" + opcode + "<-" );
                 System.exit(1);
             }
             pos+=n;
@@ -248,7 +394,7 @@ public class eddie4
         }
         //f(td);
 
-        return td[0];
+        return x(td[0]);
     }
 
     private int[] getModes(int opcode)
@@ -260,31 +406,37 @@ public class eddie4
         ret[2] = Integer.parseInt(opc.substring(1,2));
         ret[3] = Integer.parseInt(opc.substring(0,1));
         log("GETMODES:: " + ret[0] + ":" + ret[1] + "," + ret[2] + "," + ret[3]);
+
         return ret;
     }
 
     public void dump()
     {
         System.out.println("==============DUMP============");
-        int rt=0;
+        BigInteger rt=new BigInteger("0");
         for (int i=0;i<td.length;i++)
         {
-            rt+=td[i];
+            rt= rt.add(td[i]);
             if (i>0) System.out.print(" ");
             System.out.print(td[i]);
             if ((i+1)%20 == 0) System.out.println();
         }
         System.out.println("\n" + rt + "==============DUMP============");
+        for (BigInteger x:xM.keySet())
+        {
+            System.out.print(x + "=" + xM.get(x) + ",");
+        }
+        System.out.println("==============DUMP============");
     }
 
-    public int ck()
+    public BigInteger ck()
     {
-        int ret = 0;
-        for (int i:td) ret +=i;
+        BigInteger ret = new BigInteger("0");
+        for (BigInteger i:td) ret.add(i);
         return ret;
     }
 
-    private int getI()
+    private BigInteger getI()
     {
         if (inputs==null)
         {
@@ -292,7 +444,7 @@ public class eddie4
             {
                 System.out.print("input a num => ");
                 String s = R.readLine();
-                return Integer.parseInt(s);
+                return new BigInteger(s);
             }
             catch (IOException e)
             {
@@ -302,14 +454,12 @@ public class eddie4
         }
         else
         {
-            int v = inputs[inputpointer];
+            BigInteger v = inputs[inputpointer];
             inputpointer++;
             log("Input ==>" + v + "<==");
             return v;
         }
-
-
-        return 0;
+        return new BigInteger("0");
     }
 
     public void f(int []d)
