@@ -10,9 +10,9 @@ public class d10
         if (dx>=0)
         {
             if (dy >= 0)
-                return 1;
+                return 2;
             else
-                return 4;
+                return 1;
         }
         else
         {
@@ -22,7 +22,7 @@ public class d10
             }
             else
             {
-                return 2;
+                return 4;
             }
         }
     }
