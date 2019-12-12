@@ -19,6 +19,10 @@ public class eddie5
     private ArrayList<BigInteger> alloutputs = new ArrayList<>();
     private int nm = 0;
     private boolean debug=false;
+    public void debugMem(boolean v)
+    {
+        if (m!=null) m.setDebug(v);
+    }
     private boolean uselastoutput=false;
     private BigInteger lastoutput = new BigInteger("0");
     public BigInteger getlastoutpout()
@@ -31,6 +35,7 @@ public class eddie5
 
     public void setI(BigInteger []i)
     {
+        inputpointer=0;
         inputs=i;
     }
 
@@ -109,7 +114,6 @@ public class eddie5
         nm = name;
         m = new M(prog);
         m.setProg(parseprog(prog).clone());
-        log("EDDIE mk5 (c) - READY");
     }
 
     // input stuff....
@@ -137,7 +141,8 @@ public class eddie5
     public int runC(int ip)
     {
         pos=X(ip);
-
+        log("EDDIE mk5 (c) - READY");
+        log("EXECUTING from pos=>" + ip);
         while (true)
         {
             BigInteger p1=pos.add(ONE);
@@ -190,14 +195,21 @@ public class eddie5
                 if (modes[1]==2) add = add.add(m.bass);
                 log("Storing in " + add + " mode=" + modes[1] + " base=" + m.bass + " raw=" + peek(p1));
                 //BigInteger addr = get(p1,modes[1]);
-                if (inputpointer==inputs.length)
+                if (!manual)
                 {
-                    log("NO INPUTS LEFT -> SUSPENDING AT " + pos + " -->" + this.getlastoutpout() + "<--");
-                    inputpointer--;
-                    return x(pos);
+                    if (inputpointer==inputs.length)
+                    {
+                        log("NO AUTO INPUTS LEFT -> SUSPENDING AT " + pos + " Last output=" + this.getlastoutpout() + "<--");
+                        inputpointer--;
+                        return x(pos);
+                    }
+                    BigInteger v = getI();
                 }
-                BigInteger v = getI();
-                put(add,v,1); // store is always mode 1 (Immediate).....
+                else
+                {
+                    BigInteger v = getI();
+                    put(add,v,1); // store is always mode 1 (Immediate).....
+                }
             }
             else if (opcode == 4)
             {
@@ -329,5 +341,14 @@ public class eddie5
             System.out.print(i + " " );
         }
         System.out.println();
+    }
+    public ArrayList<BigInteger> getAlloutputs()
+    {
+        return this.alloutputs;
+    }
+    public void resetOutputs()
+    {
+        this.alloutputs.clear();
+        this.lastoutput = null;
     }
 }

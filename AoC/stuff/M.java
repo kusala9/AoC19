@@ -132,7 +132,7 @@ public class M
 
     public void dump()
     {
-        System.out.println("==============DUMP============");
+        System.out.println("==============RMEM============");
         BigInteger rt=new BigInteger("0");
         for (int i=0;i<td.length;i++)
         {
@@ -141,12 +141,12 @@ public class M
             System.out.print(td[i]);
             if ((i+1)%20 == 0) System.out.println();
         }
-        System.out.println("\n" + rt + "==============DUMP============");
+        System.out.println("\n" + String.format("%05d",rt) + "=========XMEM============");
         for (BigInteger x:xM.keySet())
         {
             System.out.print(x + "=" + xM.get(x) + ",");
         }
-        System.out.println("==============DUMP============");
+        System.out.println("==============XMEM============");
     }
     private void log(String msg)
     {
