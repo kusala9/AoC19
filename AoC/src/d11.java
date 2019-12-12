@@ -50,6 +50,8 @@ public class d11
         E1.resetOutputs();
         ins = E1.runC(ins);
         E1.dumpAllOutputs();
+
+        
         o = E1.getAlloutputs();
         if (o.size()!=2)
         {
