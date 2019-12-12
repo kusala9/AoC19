@@ -51,7 +51,7 @@ public class d11
         ins = E1.runC(ins);
         E1.dumpAllOutputs();
 
-        
+
         o = E1.getAlloutputs();
         if (o.size()!=2)
         {
@@ -67,7 +67,15 @@ public class d11
 
     public static pear<Pt,Integer> move(Pt from,int dir)
     {
-        return new pear<>(from,0);
+        if (dir==0)
+        {
+            return new pear<>(new Pt(from.x()-1,from.y()),0);
+        }
+        else if (dir==1)
+        {
+            return new pear<>(new Pt(from.x()+1,from.y()),0);
+        }
+        return null;
     }
     public static void paint(Pt p,int col)
     {
