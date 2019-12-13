@@ -30,64 +30,76 @@ public class d11
         E1.dump();
         Pt pos = new Pt(0,0);
         hull.put(pos,0);
-
         E1.setI(inputs);
-        int ins = E1.runC(0);
-        E1.dumpAllOutputs();
-        ArrayList<BigInteger> o = E1.getAlloutputs();
+        int ins=0;
+        System.out.println("HPR: Initial = " + pos);
 
-        if (o.size()!=2)
+        while(true)
         {
-            System.out.println("Ouch. Not got 2 vals back");
-            System.exit(1);
+            System.out.println("HPR: Position now -> " + pos + " col=" + getC(pos) + "=" + ((getC(pos)==0)?"Black":"White"));
+            System.out.println("HPR: Running");
+            ins = E1.runC(ins);
+            if (E1.isDun())
+            {
+                System.out.println("HPR: Finished -> DONE");
+                break;
+            }
+            ArrayList<BigInteger> o = E1.getAlloutputs();
+
+            if (o.size()!=2)
+            {
+                System.out.println("Ouch. Not got 2 vals back");
+                System.exit(1);
+            }
+
+            int col = o.get(0).intValue();
+            int mv  = o.get(1).intValue();
+
+            System.out.println("HPR: Received  col instruction =" + col + " turn=" + mv);
+            paint(pos,col);
+            pos.turn(mv);
+            pos.mv();
+            inputs[0] = BigInteger.valueOf(getC(pos));
+            E1.resetOutputs();
         }
-        int col = o.get(0).intValue();
-        int mv  = o.get(1).intValue();
-        System.out.println("HPR: Position=" + pos + " col=" + col + " move=" + mv);
-        pear<Pt, Integer> res = move(pos, mv);
-        inputs[0] = BigInteger.valueOf(res.second);
-        pos = res.first;
-        E1.resetOutputs();
-        ins = E1.runC(ins);
-        E1.dumpAllOutputs();
-
-
-        o = E1.getAlloutputs();
-        if (o.size()!=2)
+        pr(5);
+        for (Pt p:hull.keySet())
         {
-            System.out.println("Ouch. Not got 2 vals back");
-            System.exit(1);
+            System.out.println("-> " + p +" " + ((getC(p)==0)?"Black":"White") );
         }
-        col = o.get(0).intValue();
-        mv  = o.get(1).intValue();
-        System.out.println("HPR: Position=" + pos + " col=" + col + " move=" + mv);
-        res = move(pos, mv);
-        inputs[0] = BigInteger.valueOf(res.second);
     }
 
-    public static pear<Pt,Integer> move(Pt from,int dir)
-    {
-        if (dir==0)
-        {
-            return new pear<>(new Pt(from.x()-1,from.y()),0);
-        }
-        else if (dir==1)
-        {
-            return new pear<>(new Pt(from.x()+1,from.y()),0);
-        }
-        return null;
-    }
     public static void paint(Pt p,int col)
     {
         hull.put(p,col);
+        String s = (col==0)?"Black":"White";
+        System.out.println("HPR: Painted " + p + " = " + s);
     }
-    public int getC(Pt p)
+    public static int getC(Pt p)
     {
-        if (hull.containsKey(p)) return hull.get(p);
+        if (hull.containsKey(p))
+        {
+            return hull.get(p);
+        }
         else
         {
             hull.put(p,0);
             return 0;
         }
+    }
+    public static void pr(int dim)
+    {
+        for (int y=(dim);y>(0-dim);y--)
+        {
+            System.out.print(y + ((y>=0)?" ":"") + "|");
+            for (int x=(0-dim);x<(dim);x++)
+            {
+                Pt p = new Pt(x,y);
+                if (getC(p)==0) System.out.print(".");
+                else System.out.print("#");
+            }
+            System.out.println();
+        }
+
     }
 }

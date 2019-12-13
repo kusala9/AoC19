@@ -24,8 +24,15 @@ public class Pt extends pear<Integer,Integer>
     }
     public void turn(int i)
     {
-        if (i==0) dir=(4+(dir+1))%4;
-        else  dir=(4+(dir-1))%4;
+        if (i==0) dir=(4+(dir-1))%4;
+        else  dir=(4+(dir+1))%4;
+    }
+    public void mv()
+    {
+        if (dir==0) this.second++;
+        else if (dir==1) this.first++;
+        else if (dir==2) this.second--;
+        else if (dir==3) this.first--;
     }
 
     public static void main(String []a)
