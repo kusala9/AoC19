@@ -88,13 +88,13 @@ public class M
             else
             {
                 xM.put(i,new BigInteger("0"));
-                //log("GET: Getting value at " + i + "=" + Z);
+                log("GET: Getting value at " + i + "=" + Z);
                 return Z;
             }
         }
         else
         {
-            //log("GET: Getting value at " + i + "=" + td[x(i)]);
+            log("GET: Getting value at " + i + "=" + td[x(i)]);
             return td[x(i)];
         }
     }
@@ -151,7 +151,7 @@ public class M
     private void log(String msg)
     {
         if (!debug) return ;
-        System.out.println("MEM:: LOG:: " + msg );
+        System.out.println("      MEM:: LOG:: " + msg );
     }
     private boolean debug=false;
     public void setDebug(boolean v)

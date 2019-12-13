@@ -183,7 +183,7 @@ public class eddie5
                 BigInteger o1 = get(p1,modes[1]);
                 BigInteger o2 = get(p2,modes[2]);
                 BigInteger j  = o1.multiply(o2);
-                log("Store -> "+ j + " in " + p3 + " m[" + modes[3] + "]");
+                log("02: MULTIPLY " + o1 + " * " + o2 + " Store -> "+ j + " in " + p3 + " m[" + modes[3] + "]");
                 put(p3,j,modes[3]);
             }
             else if (opcode==3)
@@ -204,6 +204,7 @@ public class eddie5
                         return x(pos);
                     }
                     BigInteger v = getI();
+                    put(add,v,1); // store is always mode 1 (Immediate).....
                 }
                 else
                 {
@@ -271,7 +272,7 @@ public class eddie5
                 BigInteger o2 = get(p2,modes[2]);
                 if (  o1.compareTo(o2)==0 ) res = ONE ;
                 else res = Z;
-                log("EQUALS " + o1 + "=" + o2 + "=" + res );
+                log("EQUALS " + o1 + " = " + o2 + "=" + res );
                 put(p3,res,modes[3]);
             }
             else if (opcode == 9)
@@ -289,7 +290,7 @@ public class eddie5
             }
 
             pos = pos.add(BigInteger.valueOf(n));
-            log("POS now " + pos);
+            //log("POS now " + pos);
         }
         //f(td);
 

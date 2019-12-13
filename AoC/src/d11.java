@@ -2,14 +2,46 @@
    DOCO:  
 */
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class d11
 {
-    public static HashMap<Pt,Integer> hull = new HashMap<>();
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+    public static HashMap<String,Integer> hull = new HashMap<>();
+    public static HashMap<String,Integer> painted = new HashMap<>();
 
+    private static BufferedReader R = new BufferedReader(new InputStreamReader(System.in));
+    private static void getI()
+    {
+        try
+        {
+            System.out.print("input a num => ");
+            String s = R.readLine();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+    public static String sdir(int d)
+    {
+        if (d==0) return "^";
+        if (d==1) return ">";
+        if (d==2) return "V";
+        if (d==3) return "<";
+        return "X";
+    }
+    public static Pt pos;
+    public static int gp=0;
     public static void main(String []a)
     {
         System.out.println ("hw. d9");
@@ -21,23 +53,26 @@ public class d11
 
         BigInteger ONE = new BigInteger("1");
         BigInteger Z   = new BigInteger("0");
-        BigInteger []inputs = {Z};
 
         eddie5 E1 = new eddie5(2,d11);
         //E1.setDebug(true);
-        E1.debugMem(false);
+        //E1.debugMem(true);
         //E1.setManual(true);
-        E1.dump();
-        Pt pos = new Pt(0,0);
-        hull.put(pos,0);
+       // E1.dump();
+        pos = new Pt(0,0);
+        hull.put(pos.toString(),0);
+        BigInteger []inputs = {ONE};
         E1.setI(inputs);
         int ins=0;
         System.out.println("HPR: Initial = " + pos);
 
+        //for (int z=0;z<20;z++)
         while(true)
         {
+            //clearScreen();
+            //pr(5);//getI();
             System.out.println("HPR: Position now -> " + pos + " col=" + getC(pos) + "=" + ((getC(pos)==0)?"Black":"White"));
-            System.out.println("HPR: Running");
+            System.out.println("HPR: Running from MEMORY=" + ins);
             ins = E1.runC(ins);
             if (E1.isDun())
             {
@@ -55,51 +90,86 @@ public class d11
             int col = o.get(0).intValue();
             int mv  = o.get(1).intValue();
 
-            System.out.println("HPR: Received  col instruction =" + col + " turn=" + mv);
+            System.out.println("HPR: Received  col instruction =" + col + " turn=" + ((mv==0)?"Left":"Right") + " from=" + sdir(pos.dir));
             paint(pos,col);
+            System.out.println("HPR: N=" + gp);
             pos.turn(mv);
+            System.out.println("HPR: Direction now = " + sdir(pos.dir));
             pos.mv();
             inputs[0] = BigInteger.valueOf(getC(pos));
             E1.resetOutputs();
         }
-        pr(5);
-        for (Pt p:hull.keySet())
-        {
-            System.out.println("-> " + p +" " + ((getC(p)==0)?"Black":"White") );
-        }
+        pr(20,80);
+//        for (String s:painted.keySet())
+//        {
+//            System.out.println("-> " + s +" " + ((getCS(s)==0)?"Black":"White") );
+//        }
+//        System.out.println("TOTAL=" + gp);
+//        System.out.println("TOTAL UNIQUE PAINTED=" + painted.keySet().size());
     }
 
     public static void paint(Pt p,int col)
     {
-        hull.put(p,col);
-        String s = (col==0)?"Black":"White";
-        System.out.println("HPR: Painted " + p + " = " + s);
-    }
-    public static int getC(Pt p)
-    {
+        gp++;
+        Pt cleanPt = new Pt(p.x(),p.y());
         if (hull.containsKey(p))
         {
-            return hull.get(p);
+            hull.remove(cleanPt);
+            hull.put(cleanPt.toString(),col);
         }
         else
         {
-            hull.put(p,0);
+            hull.put(cleanPt.toString(),col);
+        }
+        painted.put(cleanPt.toString(),col);
+        String s = (col==0)?"Black":"White";
+        System.out.println("HPR: Painted " + p + " = " + s);
+    }
+    public static int getPainted(Pt p)
+    {
+        Pt cleanPt = new Pt(p.x(),p.y());
+        if (painted.containsKey(cleanPt.toString()))
+        {
+            return painted.get(cleanPt.toString());
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    public static int getCS(String s)
+    {
+        if (hull.containsKey(s)) return hull.get(s);
+        else return 0;
+    }
+    public static int getC(Pt p)
+    {
+        Pt cleanPt = new Pt(p.x(),p.y());
+        boolean b = hull.containsKey(cleanPt.toString());
+        if (b)
+        {
+            return hull.get(cleanPt.toString());
+        }
+        else
+        {
+            hull.put(cleanPt.toString(),0);
             return 0;
         }
     }
-    public static void pr(int dim)
+    public static void pr(int dim,int col)
     {
         for (int y=(dim);y>(0-dim);y--)
         {
             System.out.print(y + ((y>=0)?" ":"") + "|");
-            for (int x=(0-dim);x<(dim);x++)
+            for (int x=(0-col);x<(col);x++)
             {
                 Pt p = new Pt(x,y);
-                if (getC(p)==0) System.out.print(".");
+                if (p.x() == pos.x() && p.y() == pos.y()) System.out.print("O");
+                else if (getPainted(p)==0) System.out.print(".");
+                else if (getPainted(p)==-1) System.out.print(" ");
                 else System.out.print("#");
             }
             System.out.println();
         }
-
     }
 }
