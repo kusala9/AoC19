@@ -7,13 +7,13 @@ public class d12
         <x=4, y=-8, z=8>
         <x=3, y=5, z=-1>
      */
-    public static int [][]moons1 = {{-1,0,2},{2,-10,-7},{4,8,8},{3,5,-1} };
+    public static int [][]moons1 = {{-1,0,2},{2,-10,-7},{4,-8,8},{3,5,-1} };
     public static int [][]velos = {{0,0,0},{0,0,0},{0,0,0},{0,0,0} };
 
     public static void main(String []a)
     {
         System.out.println("hello word");
-        for (int i=0;i<2;i++)
+        for (int i=0;i<3;i++)
         {
             pr(moons1);
             pr(velos);
@@ -39,8 +39,8 @@ public class d12
             }
             else if (moons1[i][n] > moons1[j][n])
             {
-                velos[i][n]--;
                 velos[j][n]++;
+                velos[i][n]--;
             }
         }
     }
@@ -68,6 +68,7 @@ public class d12
             }
             System.out.println();
         }
+        System.out.println("----------------------");
     }
 }
 
