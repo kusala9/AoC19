@@ -15,28 +15,30 @@ public class d12
 <x=11, y=0, z=11>
      */
 //    public static int [][]moons1 = {{-1,0,2},{2,-10,-7},{4,-8,8},{3,5,-1} };
+//    public static int [][]origin = {{-1,0,2},{2,-10,-7},{4,-8,8},{3,5,-1} };
+
+    /*
+    Solution (diophantine equation from WOlfram Alpha)
+    a = 3329110581 n and b = 1722215397 n and c = 1118911913 n and n>=1 and n element Z
+    to positive integer solutions to (96236*a) = (186028*b) = (286332*c)
+     */
+    public static int [][]origin = {{-2,9,-5},{16,19,9},{0,3,6},{11,0,11} };
     public static int [][]moons1 = {{-2,9,-5},{16,19,9},{0,3,6},{11,0,11} };
 
     public static int [][]velos = {{0,0,0},{0,0,0},{0,0,0},{0,0,0} };
+    public static int [][]Ovelos = {{0,0,0},{0,0,0},{0,0,0},{0,0,0} };
 
     public static void main(String []a)
     {
         HashMap<String,Integer> mp = new HashMap<String,Integer>();
         ArrayList<Integer>      nl = new ArrayList<Integer>();
 
-        PrintWriter out=null;
-        try
-        {
-            out = new PrintWriter("d12_e.txt");
-        }catch (Exception e){e.printStackTrace();}
 
-        int [][] Morigin = moons1;
-        int [][] Vorigin = velos;
-        int []buf = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        System.out.println("hello word");
+        System.out.println("hello world");
         int B=20000;
         int B2=10;
-        for (int i=0;i<300000;i++)
+        boolean []dun = {false,false,false};
+        for (int i=1;i<3000000;i++)
         {
             vel(0,1);
             vel(0,2);
@@ -45,33 +47,25 @@ public class d12
             vel(1,3);
             vel(2,3);
             V();
-            int e = e();
-//            int ax = sumAxis(0);
-//            nl.add(ax);
-
-            int axis=2;
-            if (i>4)
+            //int e = e();
+            for (int axis=0;axis<3;axis++)
             {
-                buf[0]=moons1[0][axis];
-                buf[1]=moons1[1][axis];
-                buf[2]=moons1[2][axis];
-                buf[3]=moons1[3][axis];
+                if (moons1[0][axis] == origin[0][axis] &&
+                        moons1[1][axis] == origin[1][axis] &&
+                        moons1[2][axis] == origin[2][axis] &&
+                        moons1[3][axis]== origin[3][axis] &&
+                        velos[0][axis] == Ovelos[0][axis] &&
+                        velos[1][axis] == Ovelos[1][axis] &&
+                        velos[2][axis] == Ovelos[2][axis] &&
+                        velos[3][axis] == Ovelos[3][axis])
+                {
+                    dun[axis]=true;
+                    System.out.println("MATCH at step " + i + " for axis " + axis);
+                    System.out.println(i + "," + moons1[0][axis] +"," +  moons1[1][axis] + "," + moons1[2][axis] + "," + moons1[3][axis]);
+                }
             }
-            String s = md52(buf);
-            String s2="";
-            if (mp.containsKey(s))
-            {
-                s2 = i + " Mtch " + s + "=" + mp.get(s);
-                System.out.println(s2);
-            }else s2="";
-            mp.put(s,i);
-            out.println(i + "," + moons1[0][axis] +"," +  moons1[1][axis] + "," + moons1[2][axis] + "," + moons1[3][axis] + "," + "," + s + "," + s2);
-
-            //if ( (i+1)%B == 0) pr(String.format("%03d",i+1));
+            if (dun[0]&&dun[1]&&dun[2]) break;
         }
-        out.close();
-        //prSeq(32581,nl);
-
     }
 
     public static void prSeq(int offs,ArrayList<Integer> vals)
