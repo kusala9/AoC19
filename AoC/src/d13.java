@@ -16,10 +16,11 @@ public class d13
         G.debugMem(false);
         G.setManual(true);
         //G.dump();
-        //BigInteger []inputs = {};
-        //G.setI(inputs);
+        BigInteger []inputs = {Z};
+        G.setI(inputs);
         System.out.println("Running ");
         G.drawScreenOnInput(true);
+        G.getInputFromPaddle(true);
         G.runC(0);
         M mem=G.getM();
         drawScreen(mem);

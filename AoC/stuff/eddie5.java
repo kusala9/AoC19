@@ -193,6 +193,11 @@ public class eddie5
             else if (opcode==3)
             {
                 if (drawscreen) drawScreen();
+                if (getInputFromPaddle)
+                {
+                    inputs[inputs.length-1]=X(getInputFromControls());
+                    inputpointer=inputs.length-1;
+                }
                 log("03: INPUT");
                 n = 2;
                 // 203 error.....
@@ -317,6 +322,10 @@ public class eddie5
 
     private BigInteger getI()
     {
+        if (getInputFromPaddle)
+        {
+            return inputs[inputs.length-1];
+        }
         if (inputs==null)
         {
             try
@@ -363,6 +372,22 @@ public class eddie5
     {
         drawscreen=b;
     }
+
+    boolean getInputFromPaddle = false;
+    private int getInputFromControls()
+    {
+        if (ballcolumn>paddlecolumn) return 1;
+        if (ballcolumn<paddlecolumn) return -1;
+        if (ballcolumn==paddlecolumn) return 0;
+        return 0;
+    }
+    private int ballcolumn=0;
+    private int paddlecolumn=0;
+    public void getInputFromPaddle(boolean v)
+    {
+        getInputFromPaddle=true;
+    }
+
     public void drawScreen()
     {
         int offset=639;
@@ -380,10 +405,21 @@ public class eddie5
                 case 0:System.out.print(" ");break;
                 case 1:System.out.print("W");break;
                 case 2:System.out.print("#");break;
-                case 3:System.out.print("_");break;
-                case 4:System.out.print("O");break;
+                case 3:System.out.print("H");paddlecolumn=x%44;break;
+                case 4:System.out.print("O");ballcolumn=x%44;break;
             }
         }
         System.out.println();
+        ArrayList<BigInteger> op = getAlloutputs();
+        int ns=0;
+        int scor=0;
+        for (int j=0;j<op.size()-3;j++)
+        {
+            if (op.get(j).intValue()==-1 && op.get(j+1).intValue()==0)
+            {
+                scor+=op.get(j+2).intValue();
+            }
+        }
+        System.out.println("SCORE=" + String.format("%09d",scor) + "[" + ns + "]" + " PADDLE=" + paddlecolumn + " Ball=" + ballcolumn + " Input=" + inputs[inputs.length-1]);
     }
 }
