@@ -3,6 +3,7 @@
 */
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class M
@@ -134,12 +135,13 @@ public class M
     {
         System.out.println("==============RMEM============");
         BigInteger rt=new BigInteger("0");
+        System.out.print("000:");
         for (int i=0;i<td.length;i++)
         {
             rt= rt.add(td[i]);
             if (i>0) System.out.print(" ");
             System.out.print(td[i]);
-            if ((i+1)%20 == 0) System.out.println();
+            if ((i+1)%20 == 0) System.out.print(String.format("\n%03d: ",i));
         }
         System.out.println("\n" + String.format("%05d",rt) + "=========XMEM============");
         for (BigInteger x:xM.keySet())

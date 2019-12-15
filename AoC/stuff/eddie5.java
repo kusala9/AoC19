@@ -33,6 +33,10 @@ public class eddie5
     private BigInteger []inputs ;
     private int inputpointer = 0;
 
+    public M getM()
+    {
+        return this.m;
+    }
     public void setI(BigInteger []i)
     {
         inputpointer=0;
