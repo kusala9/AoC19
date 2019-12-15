@@ -12,21 +12,35 @@ public class d13
 
 
         eddie5 G = new eddie5(0,d13);
-        //E1.setDebug(true);
-        //E1.debugMem(true);
-        G.setManual(false);
-        G.dump();
-//        BigInteger []inputs = {ONE};
-//        E1.setI(inputs);
-        int ins=0;
+        //G.setDebug(true);
+        G.debugMem(false);
+        G.setManual(true);
+        //G.dump();
+        //BigInteger []inputs = {};
+        //G.setI(inputs);
         System.out.println("Running ");
+        G.drawScreenOnInput(true);
         G.runC(0);
         M mem=G.getM();
         drawScreen(mem);
         System.out.println("Fin");
+        G.drawScreenOnInput(true);
         G.dumpAllOutputs();
-        ArrayList<BigInteger> op = G.getAlloutputs();
-
+//        ArrayList<BigInteger> ret = G.getAlloutputs();
+//        int []scr = new int[ret.size()];
+//        for (int i=0;i<ret.size();i++)
+//        {
+//            scr[i] = (ret.get(i)).intValue();
+//        }
+//        int [][]screen = new int[20][44];
+//        for (int i=0;i<scr.length/3;i++)
+//        {
+//            int x=scr[(3*i)];
+//            int y=scr[(3*i)+1];
+//            int t=scr[(3*i)+2];
+//            screen[y][x] = t;
+//        }
+//        pr(screen);
     }
     public static int nt=0;
     private static BigInteger X(int i)
@@ -35,27 +49,26 @@ public class d13
     }
     public static void drawScreen(M m)
     {
-        int offset=637;
-        int len=2640;
+        int offset=639;
+        int len=880;
         int []gm = new int[len];
-        for (int i=offset;i<(offset+len);i++)
+        for (int i=0;i<len;i++)
         {
-            gm[i]=m.PEEK(X(i)).intValue();
-            BigInteger address = X(i).add(ONE);
+            gm[i]= m.PEEK(X(offset+i)).intValue();
         }
-        int [][]screen = new int[20][44];
-        int bt=0;
-        for (int i=0;i<gm.length/3;i++)
+        for (int x=0;x<gm.length;x++)
         {
-            int x=gm[(3*i)];
-            int y=gm[(3*i)+1];
-            int t=gm[(3*i)+2];
-            screen[y][x] = t;
-            if (t==2) bt++;
-            if (t==2 && screen[y][x]==2) System.out.println("Repeated block coord " + x + "," + y);
+            if (x>0&&x%44==0) System.out.println();
+            switch (gm[x])
+            {
+                case 0:System.out.print(" ");break;
+                case 1:System.out.print("W");break;
+                case 2:System.out.print("#");nt++;break;
+                case 3:System.out.print("_");break;
+                case 4:System.out.print("O");break;
+            }
         }
-        System.out.println("block tile total=" + bt);
-        pr(screen);
+        System.out.println();
     }
     public static void pr(int [][]screen)
     {

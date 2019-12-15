@@ -192,6 +192,7 @@ public class eddie5
             }
             else if (opcode==3)
             {
+                if (drawscreen) drawScreen();
                 log("03: INPUT");
                 n = 2;
                 // 203 error.....
@@ -355,5 +356,34 @@ public class eddie5
     {
         this.alloutputs.clear();
         this.lastoutput = null;
+    }
+
+    private boolean drawscreen = false;
+    public void drawScreenOnInput(boolean b)
+    {
+        drawscreen=b;
+    }
+    public void drawScreen()
+    {
+        int offset=639;
+        int len=880;
+        int []gm = new int[len];
+        for (int i=0;i<len;i++)
+        {
+            gm[i]= x(peek(offset+i));
+        }
+        for (int x=0;x<gm.length;x++)
+        {
+            if (x>0&&x%44==0) System.out.println();
+            switch (gm[x])
+            {
+                case 0:System.out.print(" ");break;
+                case 1:System.out.print("W");break;
+                case 2:System.out.print("#");break;
+                case 3:System.out.print("_");break;
+                case 4:System.out.print("O");break;
+            }
+        }
+        System.out.println();
     }
 }
