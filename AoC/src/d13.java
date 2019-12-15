@@ -14,7 +14,7 @@ public class d13
         eddie5 G = new eddie5(0,d13);
         //E1.setDebug(true);
         //E1.debugMem(true);
-        G.setManual(true);
+        G.setManual(false);
         G.dump();
 //        BigInteger []inputs = {ONE};
 //        E1.setI(inputs);
@@ -22,6 +22,7 @@ public class d13
         System.out.println("Running ");
         G.runC(0);
         M mem=G.getM();
+        drawScreen(mem);
         System.out.println("Fin");
         G.dumpAllOutputs();
         ArrayList<BigInteger> op = G.getAlloutputs();
@@ -34,7 +35,7 @@ public class d13
     }
     public static void drawScreen(M m)
     {
-        int offset=0;
+        int offset=637;
         int len=2640;
         int []gm = new int[len];
         for (int i=offset;i<(offset+len);i++)
