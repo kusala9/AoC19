@@ -15,14 +15,9 @@ public class d14
             String line;
             while ((line = br.readLine()) != null)
             {
-                // process the line.
+                String []f =  line.split("=>");
                 Pattern p = Pattern.compile("=>");
-                Matcher m = p.matcher(line);
-                if (m.matches())
-                {
-                    String part1 = m.group(1);
-                    String part2 = m.group(2);
-                }
+                
             }
         }catch (Exception e){e.printStackTrace();}
     }
