@@ -78,17 +78,17 @@ public class d14
         {
             int n = mult.get(elt.nm);
             int c = elt.v;
-            while (c>0)
+            while (c>=n)
             {
                 ret.add(e.Gen(n,elt.nm));
                 c -= n;
             }
-            if (c<0)
+            if (c>0)
             {
                 ret.add(e.Gen(c,elt.nm));
             }
-            e []r2 = new e[ret.size()];
 
+            e []r2 = new e[ret.size()];
             for (int j=0;j<ret.size();j++)
             {
                 r2[j]=ret.get(j);
@@ -118,26 +118,30 @@ public class d14
         }
         return ret;
     }
-    public static e[] f(e elt,int ind)
-    {
+    public static e[] f(e elt,int ind) {
         String pad = ns(ind);
+        e[] r = {elt};
+        int n = 0;
+        if (mult.containsKey(elt.nm))
+        {
+            n = mult.get(elt.nm);
+        }
+        if (n>0 && elt.v<n) return r;
+
 
         if (elt.nm.compareTo("ORE")==0 || elt.v <0)
         {
-            e[] r = {elt};
             return r;
         }
         e []empty = {};
         e[] elts = null;
 
+
         if (dict2.containsKey(elt))
-        {
             elts = dict2.get(elt);
-        }
         else
-        {
             elts = resolve(elt,pad);
-        }
+
         System.out.println(pad + ": Expanding " + elt + " (" + pr(elts)+ ")");
 
         for (int i=0;i<elts.length;i++)
