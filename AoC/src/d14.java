@@ -11,6 +11,8 @@ public class d14
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
 
+
+
     private static class e
     {
         String nm;
@@ -64,6 +66,33 @@ public class d14
         }
     }
 
+    private static e []adder(e[] o1, e[]o2)
+    {
+        HashMap<String,Integer>  w = new HashMap<String,Integer>();
+        for (int i=0;i<o1.length;i++)
+        {
+            e x = o1[i];
+            int nv = (w.containsKey(x.nm))?w.get(x.nm)+x.v:x.v;
+            w.put(x.nm,nv);
+        }
+        for (int i=0;i<o2.length;i++)
+        {
+            e x = o2[i];
+            int nv = (w.containsKey(x.nm))?w.get(x.nm)+x.v:x.v;
+            w.put(x.nm,nv);
+        }
+        e []ret = new e[w.keySet().size()];
+        int i=0;
+        for (String s:w.keySet())
+        {
+            e ne = new e(w.get(s),s);
+            ret[i]=ne;
+            i++;
+        }
+
+        return ret;
+    }
+
     // turn an element into nK + t where n is its atomic number :-) and t is the leftover (<0).
     public static e[] resolve(e elt)
     {
@@ -101,29 +130,16 @@ public class d14
     }
 
 
-    
-    public static String f(e elt)
+    public static e[] f(e elt)
     {
         if (elt == null) return "";
         if (dict2.containsKey(elt))
         {
             e[] elts = dict2.get(elt);
-            pr(elts);
-            for (e e2:elts)
-            {
-                e []e3 = resolve(e2);
-                for (e se:e3)
-                {
-                    f(se);
-                }
-            }
+            return elts;
         }
-        else
-        {
-            System.out.println("There is no -> " + elt);
-            return "";
-        }
-        return "";
+        e[] ret = {elt};
+        return ret;
     }
     public static e[] concat(e []aa,e []bb)
     {
@@ -158,12 +174,16 @@ public class d14
         e root = new e(1,"FUEL");
         f(root);
     }
-    public static void pr(e []elements)
+    public static String pr( e[]v)
     {
-        for (e elt:elements)
+        String ret="";
+        for (int i=0;i<v.length;i++)
         {
-            System.out.print(elt + " + ");
+            if (i>0) ret+=(" ");
+            ret+= (v[i].v<0)?"":"+";
+            ret+=v[i].v + v[i].nm;
         }
-        System.out.println();
+        return ret;
+>>>>>>> 627e23a93917f4cb2ba83d9b4793cf9c88d33fb9
     }
 }
