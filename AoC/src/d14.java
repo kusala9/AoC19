@@ -11,6 +11,8 @@ public class d14
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
 
+
+
     private static class e
     {
         String nm;
@@ -43,6 +45,32 @@ public class d14
         {
             return v + nm;
         }
+    }
+
+    private static e []adder(e[] o1, e[]o2)
+    {
+        HashMap<String,Integer>  w = new HashMap<String,Integer>();
+        for (int i=0;i<o1.length;i++)
+        {
+            e x = o1[i];
+            int nv = (w.containsKey(x.nm))?w.get(x.nm):0;
+            w.put(x.nm,nv);
+        }
+        for (int i=0;i<o2.length;i++)
+        {
+            e x = o2[i];
+            int nv = (w.containsKey(x.nm))?w.get(x.nm):0;
+            w.put(x.nm,nv);
+        }
+        e []ret = new e[w.keySet().size()];
+        int i=0;
+        for (String s:w.keySet())
+        {
+            e ne = new e(w.get(s),s);
+            ret[i]=ne;
+            i++;
+        }
+        return ret;
     }
 
     // turn an element into nK + t where n is its atomic number :-) and t is the leftover (<0).
@@ -82,7 +110,7 @@ public class d14
     }
 
 
-    
+
     public static String f(e elt)
     {
         if (dict2.containsKey(elt))
