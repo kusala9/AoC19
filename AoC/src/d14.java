@@ -30,7 +30,7 @@ public class d14
             ret[i]=ne;
             i++;
         }
-        System.out.println("ADDER:(" + pr(o1) + ") = (" + pr(ret) + ")");
+        //System.out.println("ADDER:(" + pr(o1) + ") = (" + pr(ret) + ")");
         return ret;
     }
     private static e []adder(e[] o1, e[]o2)
@@ -56,12 +56,12 @@ public class d14
             ret[i]=ne;
             i++;
         }
-        System.out.println("ADDER:(" + pr(o1) + ") + (" + pr(o2) + ") = (" + pr(ret) + ")");
+        //System.out.println("ADDER:(" + pr(o1) + ") + (" + pr(o2) + ") = (" + pr(ret) + ")");
         return ret;
     }
 
     // turn an element into nK + t where n is its atomic number :-) and t is the leftover (<0).
-    public static e[] resolve(e elt)
+    public static e[] resolve(e elt,String pad)
     {
         if (elt.v<0)
         {
@@ -94,7 +94,7 @@ public class d14
                 r2[j]=ret.get(j);
             }
 
-            System.out.println("RES: " + elt + " (" + pr(r2) + ")");
+            //System.out.println(pad + ": RES " + elt + " (" + pr(r2) + ")");
             return r2;
         }
         else if (elt.nm.compareTo("ORE")==0)
@@ -109,10 +109,18 @@ public class d14
         return null;
     }
 
-
-    public static e[] f(e elt)
+    public static String ns(int n)
     {
-        System.out.println("Expanding ->" + elt);
+        String ret = "";
+        for (int i=0;i<n;i++)
+        {
+            ret+=" ";
+        }
+        return ret;
+    }
+    public static e[] f(e elt,int ind)
+    {
+        String pad = ns(ind);
 
         if (elt.nm.compareTo("ORE")==0 || elt.v <0)
         {
@@ -128,16 +136,17 @@ public class d14
         }
         else
         {
-            elts = resolve(elt);
+            elts = resolve(elt,pad);
         }
+        System.out.println(pad + ": Expanding " + elt + " (" + pr(elts)+ ")");
 
         for (int i=0;i<elts.length;i++)
         {
-            e[] exp = f(elts[i]);
-            System.out.println(elt + "=> " + pr(exp));
+            e[] exp = f(elts[i],ind+3);
             empty = concat(empty, exp);
-            System.out.println("(" + pr(empty)+ ")");
         }
+        empty = adder(empty);
+        System.out.println(pad + ": " + elt + " = (" + pr(empty)+ ")");
         return empty;
     }
     public static e[] concat(e []aa,e []bb)
@@ -172,11 +181,11 @@ public class d14
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun");
 
-        e[]r = resolve(e.Gen(3,"A"));
+        //e[]r = resolve(e.Gen(3,"A"));
 
         e root = e.Gen(1,"FUEL");
         //System.out.println("->" + pr(resolve(new e(2,"AB"))));
-        System.out.println(pr(  adder(f(root))   ));
+        System.out.println(pr(  adder(f(root,0))   ));
     }
     public static String pr( e[]v)
     {
