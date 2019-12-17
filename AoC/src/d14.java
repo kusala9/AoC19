@@ -60,6 +60,10 @@ public class d14
         return ret;
     }
 
+    public static int getN(String nm)
+    {
+        return mult.containsKey(nm)?mult.get(nm):0;
+    }
     // turn an element into nK + t where n is its atomic number :-) and t is the leftover (<0).
     public static e[] resolve(e elt,String pad)
     {
@@ -189,7 +193,36 @@ public class d14
 
         e root = e.Gen(1,"FUEL");
         //System.out.println("->" + pr(resolve(new e(2,"AB"))));
-        System.out.println(pr(  adder(f(root,0))   ));
+        e[] ans =  adder(f(root,0));
+        
+        for (int i=0;i<ans.length;i++)
+        {
+            System.out.println("Iter=" + i);
+            if (ans[i].nm.compareTo("ORE")==0)
+            {
+                System.out.println("==>" + ans[i] + "<==" );
+                continue;
+            }
+            int n = getN(ans[i].nm);
+            e ne = (ans[i].v<n)?e.Gen(n,ans[i].nm):ans[i];
+            e []i2 = f(ne,0);
+
+            System.out.println(ans[i] + " ==>" + pr(adder(f(ne,0))) + "<==" + "n=" + n);
+        }
+
+
+
+//
+//
+//        for (int i=0;i<ans.length;i++)
+//        {
+//            int n = getN(ans[i].nm);
+//            e ee = e.Gen(n,ans[i].nm);
+//            e []e3 = dict2.get(ee);
+//            System.out.println(ans[i] + " n=" + getN(ans[i].nm) + " " + ee);
+//        }
+
+        //System.out.println(pr(ans));
     }
     public static String pr( e[]v)
     {
