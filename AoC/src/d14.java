@@ -10,59 +10,29 @@ public class d14
 {
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
-    private static class e
+
+
+    private static e []adder(e[] o1)
     {
-        String nm;
-        int v;
-        public e(int i,String s)
-        {
-            v=i;
-            nm=s;
-        }
-        public e(String s)
-        {
-            String []f = s.split(" ");
-            if (f.length!=2 && f.length!=3)
-            {
-                System.out.println("ERROR: Can't parse \"" + s + "\"" + f.length);
-                System.exit(1);
-            }
-            if (f[0].length()==0)
-            {
-                nm=f[2];
-                v=Integer.parseInt(f[1]);
-            }
-            else
-            {
-                nm=f[1];
-                v=Integer.parseInt(f[0]);
-            }
-        }
-        public String toString()
-        {
-            return v + nm;
-        }
-        @Override
+        HashMap<String,Integer>  w = new HashMap<String,Integer>();
 
-        public boolean equals(Object o)
+        for (int i=0;i<o1.length;i++)
         {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            e em = (e) o;
-            if (v != em.v) return false;
-            return nm != null ? nm.equals(em.nm) : em.nm == null;
+            e x = o1[i];
+            int nv = (w.containsKey(x.nm))?w.get(x.nm)+x.v:x.v;
+            w.put(x.nm,nv);
         }
-
-        @Override
-
-        public int hashCode()
+        e []ret = new e[w.keySet().size()];
+        int i=0;
+        for (String s:w.keySet())
         {
-            int result = (int) (v ^ (v >>> 32));
-            result = 31 * result + (nm != null ? nm.hashCode() : 0);
-            return result;
+            e ne = e.Gen(w.get(s),s);
+            ret[i]=ne;
+            i++;
         }
+        System.out.println("ADDER:(" + pr(o1) + ") = (" + pr(ret) + ")");
+        return ret;
     }
-
     private static e []adder(e[] o1, e[]o2)
     {
         HashMap<String,Integer>  w = new HashMap<String,Integer>();
@@ -82,17 +52,23 @@ public class d14
         int i=0;
         for (String s:w.keySet())
         {
-            e ne = new e(w.get(s),s);
+            e ne = e.Gen(w.get(s),s);
             ret[i]=ne;
             i++;
         }
-
+        System.out.println("ADDER:(" + pr(o1) + ") + (" + pr(o2) + ") = (" + pr(ret) + ")");
         return ret;
     }
 
     // turn an element into nK + t where n is its atomic number :-) and t is the leftover (<0).
     public static e[] resolve(e elt)
     {
+        if (elt.v<0)
+        {
+            e[] r={elt};
+            return r;
+        }
+
         if (dict2.containsKey(elt))
         {
             return dict2.get(elt);
@@ -101,14 +77,15 @@ public class d14
         if (mult.containsKey(elt.nm))
         {
             int n = mult.get(elt.nm);
-            while (elt.v>0)
+            int c = elt.v;
+            while (c>0)
             {
-                ret.add(new e(n,elt.nm));
-                elt.v -= n;
+                ret.add(e.Gen(n,elt.nm));
+                c -= n;
             }
-            if (elt.v<0)
+            if (c<0)
             {
-                ret.add(new e(elt.v,elt.nm));
+                ret.add(e.Gen(c,elt.nm));
             }
             e []r2 = new e[ret.size()];
 
@@ -117,7 +94,13 @@ public class d14
                 r2[j]=ret.get(j);
             }
 
+            System.out.println("RES: " + elt + " (" + pr(r2) + ")");
             return r2;
+        }
+        else if (elt.nm.compareTo("ORE")==0)
+        {
+            e [] r = {elt};
+            return r;
         }
         else
         {
@@ -129,18 +112,33 @@ public class d14
 
     public static e[] f(e elt)
     {
+        System.out.println("Expanding ->" + elt);
+
+        if (elt.nm.compareTo("ORE")==0 || elt.v <0)
+        {
+            e[] r = {elt};
+            return r;
+        }
         e []empty = {};
+        e[] elts = null;
+
         if (dict2.containsKey(elt))
         {
-            e[] elts = dict2.get(elt);
-            for (int i=0;i<elts.length;i++)
-            {
-                empty = adder(empty,f(elts[i]));
-            }
-            return empty;
+            elts = dict2.get(elt);
         }
-        e[] ret = resolve(elt);
-        return ret;
+        else
+        {
+            elts = resolve(elt);
+        }
+
+        for (int i=0;i<elts.length;i++)
+        {
+            e[] exp = f(elts[i]);
+            System.out.println(elt + "=> " + pr(exp));
+            empty = concat(empty, exp);
+            System.out.println("(" + pr(empty)+ ")");
+        }
+        return empty;
     }
     public static e[] concat(e []aa,e []bb)
     {
@@ -158,22 +156,27 @@ public class d14
             String line;
             while ((line = br.readLine()) != null)
             {
+                System.out.println("-->"  + line + "<--");
                 String []f =  line.split("=>");
                 String []x = f[0].split(",");
                 e[]vals = new e[x.length];
                 for (int i=0;i<x.length;i++)
                 {
-                    vals[i]= new e(x[i]);
+                    vals[i]= e.Gen(x[i]);
                 }
                 String y = f[1];
-                e K = new e(f[1]);
+                e K = e.Gen(f[1]);
                 mult.put(K.nm,K.v);
                 dict2.put(K,vals);
             }
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun");
-        e root = new e(1,"FUEL");
-        System.out.println(pr(f(root)));
+
+        e[]r = resolve(e.Gen(3,"A"));
+
+        e root = e.Gen(1,"FUEL");
+        //System.out.println("->" + pr(resolve(new e(2,"AB"))));
+        System.out.println(pr(  adder(f(root))   ));
     }
     public static String pr( e[]v)
     {
