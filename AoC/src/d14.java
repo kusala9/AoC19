@@ -129,12 +129,17 @@ public class d14
 
     public static e[] f(e elt)
     {
+        e []empty = {};
         if (dict2.containsKey(elt))
         {
             e[] elts = dict2.get(elt);
-            return elts;
+            for (int i=0;i<elts.length;i++)
+            {
+                empty = adder(empty,f(elts[i]));
+            }
+            return empty;
         }
-        e[] ret = {elt};
+        e[] ret = resolve(elt);
         return ret;
     }
     public static e[] concat(e []aa,e []bb)
@@ -168,7 +173,7 @@ public class d14
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun");
         e root = new e(1,"FUEL");
-        f(root);
+        System.out.println(pr(f(root)));
     }
     public static String pr( e[]v)
     {
