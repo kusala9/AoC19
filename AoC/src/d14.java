@@ -43,6 +43,25 @@ public class d14
         {
             return v + nm;
         }
+        @Override
+
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            e em = (e) o;
+            if (v != em.v) return false;
+            return nm != null ? nm.equals(em.nm) : em.nm == null;
+        }
+
+        @Override
+
+        public int hashCode()
+        {
+            int result = (int) (v ^ (v >>> 32));
+            result = 31 * result + (nm != null ? nm.hashCode() : 0);
+            return result;
+        }
     }
 
     // turn an element into nK + t where n is its atomic number :-) and t is the leftover (<0).
@@ -85,10 +104,24 @@ public class d14
     
     public static String f(e elt)
     {
+        if (elt == null) return "";
         if (dict2.containsKey(elt))
         {
             e[] elts = dict2.get(elt);
-
+            pr(elts);
+            for (e e2:elts)
+            {
+                e []e3 = resolve(e2);
+                for (e se:e3)
+                {
+                    f(se);
+                }
+            }
+        }
+        else
+        {
+            System.out.println("There is no -> " + elt);
+            return "";
         }
         return "";
     }
@@ -122,10 +155,15 @@ public class d14
             }
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun");
-        f(new e(1,"FUEL"));
-        e []b8 = resolve(new e(8,"B"));
-        e []b3 = resolve(new e(3,"B"));
-
-        System.out.println("Done");
+        e root = new e(1,"FUEL");
+        f(root);
+    }
+    public static void pr(e []elements)
+    {
+        for (e elt:elements)
+        {
+            System.out.print(elt + " + ");
+        }
+        System.out.println();
     }
 }
