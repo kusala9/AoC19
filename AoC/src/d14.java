@@ -10,9 +10,6 @@ public class d14
 {
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
-
-
-
     private static class e
     {
         String nm;
@@ -132,7 +129,6 @@ public class d14
 
     public static e[] f(e elt)
     {
-        if (elt == null) return "";
         if (dict2.containsKey(elt))
         {
             e[] elts = dict2.get(elt);
@@ -184,6 +180,5 @@ public class d14
             ret+=v[i].v + v[i].nm;
         }
         return ret;
->>>>>>> 627e23a93917f4cb2ba83d9b4793cf9c88d33fb9
     }
 }
