@@ -53,13 +53,13 @@ public class d14
         for (int i=0;i<o1.length;i++)
         {
             e x = o1[i];
-            int nv = (w.containsKey(x.nm))?w.get(x.nm):0;
+            int nv = (w.containsKey(x.nm))?w.get(x.nm)+x.v:x.v;
             w.put(x.nm,nv);
         }
         for (int i=0;i<o2.length;i++)
         {
             e x = o2[i];
-            int nv = (w.containsKey(x.nm))?w.get(x.nm):0;
+            int nv = (w.containsKey(x.nm))?w.get(x.nm)+x.v:x.v;
             w.put(x.nm,nv);
         }
         e []ret = new e[w.keySet().size()];
@@ -70,6 +70,7 @@ public class d14
             ret[i]=ne;
             i++;
         }
+
         return ret;
     }
 
@@ -110,15 +111,15 @@ public class d14
     }
 
 
-
-    public static String f(e elt)
+    public static e[] f(e elt)
     {
         if (dict2.containsKey(elt))
         {
             e[] elts = dict2.get(elt);
-
+            return elts;
         }
-        return "";
+        e[] ret = {elt};
+        return ret;
     }
     public static e[] concat(e []aa,e []bb)
     {
@@ -150,10 +151,27 @@ public class d14
             }
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun");
-        f(new e(1,"FUEL"));
-        e []b8 = resolve(new e(8,"B"));
-        e []b3 = resolve(new e(3,"B"));
+        System.out.println(pr(f(new e(1,"FUEL"))));
 
-        System.out.println("Done");
+//        e []b8 = resolve(new e(8,"B"));
+//        e []c5 = resolve(new e(5,"C"));
+//        e []c7 = resolve(new e(7,"C"));
+//
+//        e []f = adder(c7,c5);
+//        e []g = adder(f,b8);
+//        System.out.println("==>" + pr(g));
+//        System.out.println("Done");
+    }
+
+    public static String pr( e[]v)
+    {
+        String ret="";
+        for (int i=0;i<v.length;i++)
+        {
+            if (i>0) ret+=(" ");
+            ret+= (v[i].v<0)?"":"+";
+            ret+=v[i].v + v[i].nm;
+        }
+        return ret;
     }
 }
