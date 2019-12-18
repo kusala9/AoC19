@@ -194,7 +194,7 @@ public class d14
         e root = e.Gen(1,"FUEL");
         //System.out.println("->" + pr(resolve(new e(2,"AB"))));
         e[] ans =  adder(f(root,0));
-        
+
         for (int i=0;i<ans.length;i++)
         {
             System.out.println("Iter=" + i);
