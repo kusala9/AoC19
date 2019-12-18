@@ -230,16 +230,41 @@ public class d14
         e root = e.Gen(1,"FUEL");
         e[] rl = {root};
         e[] empty = {};
-        // +1GPVTF +1QDVJ +5KHKGT +4DCFZ +4NZVS +3HKGWZ
-//        e[] diff = {e.Gen(1,"GPVTF"),
-//        e.Gen(1,"QDVJ"), e.Gen(5,"KHKGT"),
-//        e.Gen(2,"DCFZ"), e.Gen(1,"NZVS"),
-//        e.Gen(1,"HKGWZ")};
 
         //rl = adder(rl,diff);
         for (int j=0;j<2;j++)
         {
-            for (int i=0;i<7;i++)
+            for (int i=0;i<6;i++)
+            {
+                rl = f2(rl);
+                System.out.println(i + ": " + pr(rl));
+                rl = mineOre(rl);
+            }
+            rl = adder(rl);
+            System.out.println(pr(rl));
+        }
+
+        //e[] extras = {e.Gen(1,"GPVTF"),e.Gen(2,"DCFZ"),e.Gen(1,"NZVS"),e.Gen(2,"HKGWZ"),e.Gen(8,"QDVJ")};
+        e[] extras = {e.Gen(8,"QDVJ"),e.Gen(3,"KHKGT")};
+        rl = adder(rl,extras);
+
+        for (int j=0;j<2;j++)
+        {
+            for (int i=0;i<3;i++)
+            {
+                rl = f2(rl);
+                System.out.println(i + ": " + pr(rl));
+                rl = mineOre(rl);
+            }
+            rl = adder(rl);
+            System.out.println(pr(rl));
+        }
+        e[] extras3 = {e.Gen(5,"DCFZ"),e.Gen(3,"PSHF"),e.Gen(4,"NZVS")};
+        rl = adder(rl,extras3);
+
+        for (int j=0;j<2;j++)
+        {
+            for (int i=0;i<3;i++)
             {
                 rl = f2(rl);
                 System.out.println(i + ": " + pr(rl));
@@ -249,6 +274,7 @@ public class d14
             System.out.println(pr(rl));
         }
     }
+
 
 
     public static String pr( e[]v)
