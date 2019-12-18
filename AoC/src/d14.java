@@ -8,6 +8,7 @@ public class d14
 {
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
+    public static HashMap<String,Integer> ores = new HashMap<>();
 
 
     private static e []adder(e[] o1)
@@ -207,7 +208,8 @@ public class d14
     public static void main(String []a)
     {
         File file = new File("d14_1.txt");
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
+        {
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -215,12 +217,17 @@ public class d14
                 String []f =  line.split("=>");
                 String []x = f[0].split(",");
                 e[]vals = new e[x.length];
+                String y = f[1];
+                e K = e.Gen(f[1]);
                 for (int i=0;i<x.length;i++)
                 {
                     vals[i]= e.Gen(x[i]);
+                    if (x.length==1 && vals[i].nm.compareTo("ORE")==0)
+                    {
+                        ores.put(K.nm,vals[i].v);
+                    }
                 }
-                String y = f[1];
-                e K = e.Gen(f[1]);
+
                 mult.put(K.nm,K.v);
                 dict2.put(K,vals);
             }
@@ -231,51 +238,95 @@ public class d14
         e[] rl = {root};
         e[] empty = {};
 
+
         //rl = adder(rl,diff);
-        for (int j=0;j<2;j++)
-        {
-            for (int i=0;i<6;i++)
-            {
-                rl = f2(rl);
-                System.out.println(i + ": " + pr(rl));
-                rl = mineOre(rl);
-            }
-            rl = adder(rl);
-            System.out.println(pr(rl));
-        }
+        System.out.println(rl.length + ": " + pr(rl));
+        rl = expMineAdd(rl);
+        System.out.println(rl.length + ": " + pr(rl));
 
-        //e[] extras = {e.Gen(1,"GPVTF"),e.Gen(2,"DCFZ"),e.Gen(1,"NZVS"),e.Gen(2,"HKGWZ"),e.Gen(8,"QDVJ")};
-        e[] extras = {e.Gen(8,"QDVJ"),e.Gen(3,"KHKGT")};
-        rl = adder(rl,extras);
+        e[] extras = addOre(rl);
+        rl = mineOre(adder(rl,extras));
 
-        for (int j=0;j<2;j++)
-        {
-            for (int i=0;i<3;i++)
-            {
-                rl = f2(rl);
-                System.out.println(i + ": " + pr(rl));
-                rl = mineOre(rl);
-            }
-            rl = adder(rl);
-            System.out.println(pr(rl));
-        }
-        e[] extras3 = {e.Gen(5,"DCFZ"),e.Gen(3,"PSHF"),e.Gen(4,"NZVS")};
-        rl = adder(rl,extras3);
+        rl = mineOre(adder(expMineAdd(addCompound(rl))));
+        System.out.println(rl.length + ": " + pr(rl));
 
-        for (int j=0;j<2;j++)
-        {
-            for (int i=0;i<3;i++)
-            {
-                rl = f2(rl);
-                System.out.println(i + ": " + pr(rl));
-                rl = mineOre(rl);
-            }
-            rl = adder(rl);
-            System.out.println(pr(rl));
-        }
+
+
+//        System.out.println(rl.length + ": " + pr(rl));
+//        e[] extras2 = addCompound(rl);
+//        rl = adder(rl,extras2);
+//        rl = expMineAdd(rl);
+//        System.out.println(rl.length + ": " + pr(rl));
+//
+//
+//        rl = mineOre(rl);
+//        System.out.println(rl.length + ": " + pr(rl));
+//
+//        e[] extras3 = addCompound(rl);
+//        rl = adder(rl,extras3);
+//        rl = expMineAdd(rl);
+//        System.out.println(rl.length + ": " + pr(rl));
+//        e[] extras4 = addOre(rl);
+//        rl = adder(rl,extras4);
+//        rl = expMineAdd(rl);
+//        System.out.println(rl.length + ": " + pr(rl));
     }
 
+    public static e[] addOre(e[] rl)
+    {
+        e[] extras2 = {};
+        for (int i=0;i<rl.length;i++)
+        {
+            if (ores.containsKey(rl[i].nm))
+            {
+                System.out.println("Adding ->" + rl[i]);
+                int d = mult.get(rl[i].nm) - rl[i].v;
+                e[] x = {e.Gen(d,rl[i].nm)};
+                extras2 = concat(extras2,x);
+            }
+        }
+        return extras2;
+    }
 
+    public static e[] addCompound(e[] rl)
+    {
+        e[] extras = {};
+        for (int i=0;i<rl.length;i++)
+        {
+            if (!ores.containsKey(rl[i].nm))
+            {
+                int d = mult.get(rl[i].nm) - rl[i].v;
+                e[] x = {e.Gen(d,rl[i].nm)};
+                System.out.println("Adding ->" + pr(x));
+                extras = concat(extras,x);
+            }
+        }
+        return extras;
+    }
+
+    public static e[] expMineAdd(e[] rl)
+    {
+        int lastexpander=0;
+        int lastadder=0;
+        while (true)
+        {
+            int i=0;
+            while (true)
+            {
+                rl = f2(rl);
+                //System.out.println(i + "[" + rl.length + "]" + ": " + pr(rl));
+                //rl = mineOre(rl);
+                if (rl.length == lastexpander) break;
+                lastexpander=rl.length;
+                i++;
+            }
+            rl = adder(rl);
+            if (rl.length == lastadder) break;
+            lastadder=rl.length;
+            System.out.println(rl.length + ": " + pr(rl));
+        }
+        return rl;
+    }
 
     public static String pr( e[]v)
     {
