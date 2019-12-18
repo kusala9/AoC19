@@ -177,6 +177,18 @@ public class d14
     public static int ore = 0;
     public static e[] mineOre(e []stuff)
     {
+//        ArrayList<e> ret2 = new ArrayList<e>();
+//        for (int i=0;i<stuff.length;i++)
+//        {
+//            e ee = stuff[i];
+//            if (dict2.containsKey(ee))
+//            {
+//                e[] v = dict2.get(ee);
+//            }
+//            if (ee.nm.compareTo("ORE")==0) ore+=ee.v;
+//            else ret2.add(ee);
+//        }
+
         ArrayList<e> ret = new ArrayList<e>();
         for (int i=0;i<stuff.length;i++)
         {
@@ -218,28 +230,24 @@ public class d14
         e root = e.Gen(1,"FUEL");
         e[] rl = {root};
         e[] empty = {};
+        // +1GPVTF +1QDVJ +5KHKGT +4DCFZ +4NZVS +3HKGWZ
+//        e[] diff = {e.Gen(1,"GPVTF"),
+//        e.Gen(1,"QDVJ"), e.Gen(5,"KHKGT"),
+//        e.Gen(2,"DCFZ"), e.Gen(1,"NZVS"),
+//        e.Gen(1,"HKGWZ")};
 
-        for (int i=0;i<4;i++)
+        //rl = adder(rl,diff);
+        for (int j=0;j<2;j++)
         {
-            rl = f2(rl);
+            for (int i=0;i<7;i++)
+            {
+                rl = f2(rl);
+                System.out.println(i + ": " + pr(rl));
+                rl = mineOre(rl);
+            }
+            rl = adder(rl);
             System.out.println(pr(rl));
         }
-
-        //        e[] ans =  adder(f(root,0));
-//        ans = mineOre(ans);
-//        System.out.println(pr(ans) + "    O=" + ore);
-//
-//        for (int i=0;i<ans.length;i++)
-//        {
-//            System.out.println("Iter=" + i + " " + ans[i]);
-//            int n = getN(ans[i].nm);
-//            e ne = (ans[i].v<n)?e.Gen(n,ans[i].nm):ans[i];
-//            e []i2 = f(ne,0);
-//            i2 = mineOre(i2);
-//            empty = concat(empty,i2);
-//            //System.out.println(ans[i] + " ==>" + pr(adder(f(ne,0))) + "<==" + "n=" + n);
-//        }
-//        System.out.println(pr(empty) + "    O=" + ore);
     }
 
 
@@ -252,6 +260,6 @@ public class d14
             ret+= (v[i].v<0)?"":"+";
             ret+=v[i].v + v[i].nm;
         }
-        return ret;
+        return ret + ":   O=" + ore;
     }
 }
