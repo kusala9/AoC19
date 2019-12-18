@@ -3,10 +3,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class d14
+public class d14_2
 {
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
@@ -89,7 +87,7 @@ public class d14
             }
             if (c>0)
             {
-                ret.add(e.Gen(c,elt.nm));
+                ret.add(e.Gen(n,elt.nm));
             }
 
             e []r2 = new e[ret.size()];
@@ -121,20 +119,6 @@ public class d14
             ret+=" ";
         }
         return ret;
-    }
-
-    public static e[] f2( e[] elts)
-    {
-        e []empty = {};
-        for (e ee:elts)
-        {
-            if (dict2.containsKey(ee))
-                elts = dict2.get(ee);
-            else
-                elts = resolve(ee," ");
-            empty = concat(empty,elts);
-        }
-        return empty;
     }
     public static e[] f(e elt,int ind)
     {
@@ -218,30 +202,22 @@ public class d14
         System.out.println("dun");
 
         e root = e.Gen(1,"FUEL");
-        e[] rl = {root};
+        e[] ans =  adder(f(root,0));
+        ans = mineOre(ans);
+
         e[] empty = {};
-
-        for (int i=0;i<4;i++)
+        System.out.println(pr(ans) + "    O=" + ore);
+        for (int i=0;i<ans.length;i++)
         {
-            rl = f2(rl);
-            System.out.println(pr(rl));
+            System.out.println("Processing -> " + i + " " + ans[i]);
+            int n = getN(ans[i].nm);
+            e   ne = (ans[i].v<n)?e.Gen(n,ans[i].nm):ans[i];
+            e[] i2 = f(ne,0);
+            i2     = mineOre(i2);
+            empty  = concat(empty,i2);
+            System.out.println(ans[i] + " ==>" + pr(i2) + "<==" + "n=" + n);
         }
-
-        //        e[] ans =  adder(f(root,0));
-//        ans = mineOre(ans);
-//        System.out.println(pr(ans) + "    O=" + ore);
-//
-//        for (int i=0;i<ans.length;i++)
-//        {
-//            System.out.println("Iter=" + i + " " + ans[i]);
-//            int n = getN(ans[i].nm);
-//            e ne = (ans[i].v<n)?e.Gen(n,ans[i].nm):ans[i];
-//            e []i2 = f(ne,0);
-//            i2 = mineOre(i2);
-//            empty = concat(empty,i2);
-//            //System.out.println(ans[i] + " ==>" + pr(adder(f(ne,0))) + "<==" + "n=" + n);
-//        }
-//        System.out.println(pr(empty) + "    O=" + ore);
+        System.out.println(pr(empty) + "    O=" + ore);
     }
 
 
