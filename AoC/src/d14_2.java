@@ -5,6 +5,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// this one is like a war zone. Two algorithms. Spent 3 days on the first one then took a hint and started
+// from scratch using the stuff that was left lying around. Finally got it working then left it overnight
+// genrating 3.5m iterations to get sufficiently close to the answer.
+// this was a real journey.....
+
+// and also, I should have started with scala from the off :-) 
+
 public class d14_2
 {
     public static HashMap<String,Integer> mult = new HashMap<>();
