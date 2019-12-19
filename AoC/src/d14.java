@@ -243,12 +243,12 @@ public class d14
         System.out.println(rl.length + ": " + pr(rl));
         rl = expMineAdd(rl);
         System.out.println(rl.length + ": " + pr(rl));
-
-        e[] extras = addOre(rl);
-        rl = mineOre(adder(rl,extras));
-
-        rl = mineOre(adder(expMineAdd(addCompound(rl))));
-        System.out.println(rl.length + ": " + pr(rl));
+//
+//        e[] extras = addOre(rl);
+//        rl = mineOre(adder(rl,extras));
+//
+//        rl = mineOre(adder(expMineAdd(addCompound(rl))));
+//        System.out.println(rl.length + ": " + pr(rl));
 
 
 

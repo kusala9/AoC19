@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,6 +9,8 @@ public class d14_2
 {
     public static HashMap<String,Integer> mult = new HashMap<>();
     public static HashMap<e,e []> dict2 = new HashMap<>();
+    public static HashMap<String,Integer> ores = new HashMap<>();
+    public static HashMap<String,Integer> dict3 = new HashMap<>();
 
 
     private static e []adder(e[] o1)
@@ -87,7 +90,7 @@ public class d14_2
             }
             if (c>0)
             {
-                ret.add(e.Gen(n,elt.nm));
+                ret.add(e.Gen(c,elt.nm));
             }
 
             e []r2 = new e[ret.size()];
@@ -119,6 +122,20 @@ public class d14_2
             ret+=" ";
         }
         return ret;
+    }
+
+    public static e[] f2( e[] elts)
+    {
+        e []empty = {};
+        for (e ee:elts)
+        {
+            if (dict2.containsKey(ee))
+                elts = dict2.get(ee);
+            else
+                elts = resolve(ee," ");
+            empty = concat(empty,elts);
+        }
+        return empty;
     }
     public static e[] f(e elt,int ind)
     {
@@ -161,8 +178,21 @@ public class d14_2
     }
     //extract ore from list...
     public static int ore = 0;
+    public static BigInteger ore2 = new BigInteger("0");
     public static e[] mineOre(e []stuff)
     {
+//        ArrayList<e> ret2 = new ArrayList<e>();
+//        for (int i=0;i<stuff.length;i++)
+//        {
+//            e ee = stuff[i];
+//            if (dict2.containsKey(ee))
+//            {
+//                e[] v = dict2.get(ee);
+//            }
+//            if (ee.nm.compareTo("ORE")==0) ore+=ee.v;
+//            else ret2.add(ee);
+//        }
+
         ArrayList<e> ret = new ArrayList<e>();
         for (int i=0;i<stuff.length;i++)
         {
@@ -181,7 +211,8 @@ public class d14_2
     public static void main(String []a)
     {
         File file = new File("d14_1.txt");
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
+        {
             String line;
             while ((line = br.readLine()) != null)
             {
@@ -189,37 +220,189 @@ public class d14_2
                 String []f =  line.split("=>");
                 String []x = f[0].split(",");
                 e[]vals = new e[x.length];
+                String y = f[1];
+                e K = e.Gen(f[1]);
                 for (int i=0;i<x.length;i++)
                 {
                     vals[i]= e.Gen(x[i]);
+                    if (x.length==1 && vals[i].nm.compareTo("ORE")==0)
+                    {
+                        ores.put(K.nm,vals[i].v);
+                    }
                 }
-                String y = f[1];
-                e K = e.Gen(f[1]);
                 mult.put(K.nm,K.v);
                 dict2.put(K,vals);
             }
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun");
-
+        BigInteger tri = new BigInteger("1000000000000");
+        BigInteger ONE = new BigInteger("1");
         e root = e.Gen(1,"FUEL");
-        e[] ans =  adder(f(root,0));
-        ans = mineOre(ans);
-
         e[] empty = {};
-        System.out.println(pr(ans) + "    O=" + ore);
-        for (int i=0;i<ans.length;i++)
+        for (int i=1;i<100000000;i++)
         {
-            System.out.println("Processing -> " + i + " " + ans[i]);
-            int n = getN(ans[i].nm);
-            e   ne = (ans[i].v<n)?e.Gen(n,ans[i].nm):ans[i];
-            e[] i2 = f(ne,0);
-            i2     = mineOre(i2);
-            empty  = concat(empty,i2);
-            System.out.println(ans[i] + " ==>" + pr(i2) + "<==" + "n=" + n);
+            BigInteger bi = new BigInteger(Integer.toString(i));
+            int orespend = ore;
+            ore=0;
+            double oreperfuel = ore2.doubleValue()/bi.doubleValue();
+            make(root,"  ");;
+            if (i%1000==0)
+                System.out.println(String.format("%07d",i) + " " + ore2 + " Finished " + oreperfuel + " ORE=" + ore2) ;
         }
-        System.out.println(pr(empty) + "    O=" + ore);
+
+
+
+    }
+    public static ArrayList<e> used = new ArrayList<e>();
+    public static HashMap<String,Integer> store = new HashMap<String,Integer>();
+    public static void make(e r,String pad)
+    {
+        if (r.nm.compareTo("ORE")==0)
+        {
+            //System.out.println(pad + " ORE  " + r);
+            BigInteger bi = new BigInteger(Integer.toString(r.v));
+            ore2 = ore2.add(bi);
+            ore+=r.v;
+            return;
+        }
+        int reqd = r.v;
+        int n = mult.get(r.nm);
+        //System.out.println(pad + r.nm + ": Need -> " + reqd + " " +  "Can make " + n + " at a time");
+        int got = (store.containsKey(r.nm))?store.get(r.nm):0;
+        int made=0;
+        //System.out.println(pad + "In store=" + got);
+        if (got>0)
+        {
+            if (got>=reqd)
+            {
+                made+=reqd;
+                store.put(r.nm,got-reqd);
+                //System.out.println(pad + " now got " + made + " store=" + store.get(r.nm) + " " + r.nm + " left in store");
+            }
+            else
+            {
+                made+=got;
+                //System.out.println(pad + "Used up all in store... Have made " + made);
+                store.put(r.nm,0);
+            }
+        }
+        if (made<r.v)
+        {
+            //System.out.println(pad + "Making " + n + " " + r.nm + " - have  " + made);
+            while (made<r.v)
+            {
+                e mk = e.Gen(n,r.nm);
+                e[] elts = dict2.get(mk);
+                for (int i=0;i<elts.length;i++)
+                {
+                    //System.out.println(pad + "Making " + elts[i]);
+                    make(elts[i],pad+"  ");
+                }
+                made+=n;
+            }
+            if (made>r.v)
+            {
+                int leftover=made-r.v;
+                int nleftover = (store.containsKey(r.nm))?store.get(r.nm):0;
+                nleftover+=leftover;
+                //System.out.println(pad + " Putting " + nleftover + " " + r.nm + " in store " );
+                store.put(r.nm,nleftover);
+            }
+        }
+        //System.out.println(pad + " Finished " + r + " ORE=" + ore + " Store=" + prs());
+
+    }
+    public static String prs()
+    {
+        HashMap<String,Integer> ns = new HashMap<>();
+        String ret="";
+        for (String s:store.keySet())
+        {
+            if (store.get(s)>0)
+            {
+                ns.put(s,store.get(s));
+                ret+=store.get(s) + s + " ";
+            }
+        }
+        store=ns;
+        return ret;
+    }
+    public static e[] addOre(e[] rl)
+    {
+        e[] extras2 = {};
+        for (int i=0;i<rl.length;i++)
+        {
+            if (ores.containsKey(rl[i].nm))
+            {
+                System.out.println("Adding ->" + rl[i]);
+                int d = mult.get(rl[i].nm) - rl[i].v;
+                e[] x = {e.Gen(d,rl[i].nm)};
+                extras2 = concat(extras2,x);
+            }
+        }
+        return extras2;
     }
 
+    public static e[] addCompound(e[] rl)
+    {
+        e[] extras = {};
+        for (int i=0;i<rl.length;i++)
+        {
+            if (!ores.containsKey(rl[i].nm))
+            {
+                int d = mult.get(rl[i].nm) - rl[i].v;
+                e[] x = {e.Gen(d,rl[i].nm)};
+                System.out.println("Adding ->" + pr(x));
+                extras = concat(extras,x);
+            }
+        }
+        return extras;
+    }
+
+    private static String gete(String s)
+    {
+        String nm="";
+        String []f = s.split(" ");
+        if (f.length!=2 && f.length!=3)
+        {
+            System.out.println("ERROR: Can't parse \"" + s + "\"" + f.length);
+            System.exit(1);
+        }
+        if (f[0].length()==0)
+        {
+            nm=f[2];
+            int v=Integer.parseInt(f[1]);
+        }
+        else
+        {
+            nm=f[1];
+            int v=Integer.parseInt(f[0]);
+        }
+        return nm;
+    }
+    public static e[] expMineAdd(e[] rl)
+    {
+        int lastexpander=0;
+        int lastadder=0;
+        while (true)
+        {
+            int i=0;
+            while (true)
+            {
+                rl = f2(rl);
+                //System.out.println(i + "[" + rl.length + "]" + ": " + pr(rl));
+                //rl = mineOre(rl);
+                if (rl.length == lastexpander) break;
+                lastexpander=rl.length;
+                i++;
+            }
+            rl = adder(rl);
+            if (rl.length == lastadder) break;
+            lastadder=rl.length;
+            System.out.println(rl.length + ": " + pr(rl));
+        }
+        return rl;
+    }
 
     public static String pr( e[]v)
     {
@@ -230,6 +413,6 @@ public class d14_2
             ret+= (v[i].v<0)?"":"+";
             ret+=v[i].v + v[i].nm;
         }
-        return ret;
+        return ret + ":   O=" + ore;
     }
 }

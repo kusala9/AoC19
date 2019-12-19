@@ -18,6 +18,7 @@ public final class e
         v=i;
         nm=s;
     }
+
     private e(String s)
     {
         String []f = s.split(" ");
