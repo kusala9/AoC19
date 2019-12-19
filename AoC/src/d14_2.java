@@ -245,6 +245,7 @@ public class d14_2
             int orespend = ore;
             ore=0;
             double oreperfuel = ore2.doubleValue()/bi.doubleValue();
+            BigInteger div = tri.divide(bi);
             make(root,"  ");;
             if (i%1000==0)
                 System.out.println(String.format("%07d",i) + " " + ore2 + " Finished " + oreperfuel + " ORE=" + ore2) ;
