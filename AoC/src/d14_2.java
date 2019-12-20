@@ -10,7 +10,7 @@ import java.util.HashMap;
 // genrating 3.5m iterations to get sufficiently close to the answer.
 // this was a real journey.....
 
-// and also, I should have started with scala from the off :-) 
+// and also, I should have started with scala from the off :-)
 
 public class d14_2
 {
