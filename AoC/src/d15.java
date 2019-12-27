@@ -18,8 +18,13 @@ public class d15
     public static int yoff=1000;
     public static int screen[][] = new int[3000][3000];
     public static int been[][] = new int[3000][3000];
+    public static int filled[][] = new int[3000][3000];
+
     public static int steps = 0;
     public static int x=0,y=0;
+    public static int ox=0;
+    public static int oy=0;
+
     public static BigInteger N = new BigInteger("1");
     public static BigInteger S = new BigInteger("2");
     public static BigInteger W = new BigInteger("3");
@@ -32,6 +37,7 @@ public class d15
             {
                 been[i1][i2] = 0;
                 screen[i1][i2] = 0;
+                filled[i1][i2] = 0;
             }
         }
 
@@ -67,11 +73,26 @@ north (1), south (2), west (3), and east (4)
         dpr(W,"");
 
         pr();
-//        for (int iter=0;iter<ai.length;iter++)
-//        {
-//            dp(ai[iter]);
-//        }
-//        pr();
+
+        // now want to fill with oxygen....
+        oxy(0,ox,oy);
+        proxy();
+    }
+
+    public static int maxs=0;
+    public static void oxy(int s,int x,int y)
+    {
+        // are we at a dead end....
+        System.out.println(s + ": OXY: " + x + "," + y + " max=" + maxs);
+        s++;
+        if (s>maxs) maxs=s;
+        int tx=xoff+x;
+        int ty=yoff+y;
+        filled[tx][ty] = s;
+        if ((been[tx+1][ty])==1 && filled[tx+1][ty]==0) oxy(s,x+1,y);
+        if ((been[tx-1][ty])==1 && filled[tx-1][ty]==0) oxy(s,x-1,y);
+        if ((been[tx][ty+1])==1 && filled[tx][ty+1]==0) oxy(s,x,y+1);
+        if ((been[tx][ty-1])==1 && filled[tx][ty-1]==0) oxy(s,x,y-1);
     }
 
     public static String d(int n)
@@ -101,6 +122,8 @@ north (1), south (2), west (3), and east (4)
         if (i==2)
         {
             System.out.println("Found Oxygen. Steps=" + steps);
+            ox=x;
+            oy=y;
             pr();
             //System.exit(1);
         }
@@ -238,6 +261,31 @@ north (1), south (2), west (3), and east (4)
                 }
                 else if (screen[c][r]==1) System.out.print("_");
                 else System.out.print(".");
+            }
+            System.out.println(String.format("%02d",r));
+        }
+        System.out.println("ooh=" + ooh);
+    }
+    public static void proxy()
+    {
+        int px=50;
+        int py=50;
+        int ooh=0;
+        for (int r=yoff+py;r>=yoff-30;r--)
+        {
+            for (int c=xoff+0-35;c<xoff+px;c++)
+            {
+                if (c==xoff && r==yoff)
+                {
+                    System.out.print("X");
+                }
+                else if (filled[c][r] > 0)
+                {
+                    System.out.print(String.format("%02d",filled[c][r]%100));
+                    ooh++;
+                }
+                else if (screen[c][r]==1) System.out.print("__");
+                else System.out.print("..");
             }
             System.out.println(String.format("%02d",r));
         }
