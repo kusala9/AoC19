@@ -102,7 +102,6 @@ north (1), south (2), west (3), and east (4)
         {
             System.out.println("Found Oxygen. Steps=" + steps);
             pr();
-            return true;
             //System.exit(1);
         }
 
@@ -232,7 +231,7 @@ north (1), south (2), west (3), and east (4)
                 {
                     System.out.print("X");
                 }
-                if (been[c][r] == 1)
+                else if (been[c][r] == 1)
                 {
                     System.out.print('O');
                     ooh++;
