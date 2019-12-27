@@ -191,35 +191,23 @@ public class mazeDroid
             }
             else if (opcode==3)
             {
-                if (drawscreen) drawScreen();
-                if (getInputFromPaddle)
-                {
-                    inputs[inputs.length-1]=X(getInputFromControls());
-                    inputpointer=inputs.length-1;
-                }
                 log("03: INPUT");
                 n = 2;
                 // 203 error.....
                 BigInteger add = peek(p1);
                 if (modes[1]==2) add = add.add(m.bass);
-                log("Storing in " + add + " mode=" + modes[1] + " base=" + m.bass + " raw=" + peek(p1));
-                //BigInteger addr = get(p1,modes[1]);
-                if (!manual)
+                log("Input will be stored in " + add + " mode=" + modes[1] + " base=" + m.bass + " raw=" + peek(p1));
+                if (!gotInputFromOutside)
                 {
-                    if (inputpointer==inputs.length)
-                    {
-                        log("NO AUTO INPUTS LEFT -> SUSPENDING AT " + pos + " Last output=" + this.getlastoutpout() + "<--");
-                        inputpointer--;
-                        return x(pos);
-                    }
-                    BigInteger v = getI();
-                    put(add,v,1); // store is always mode 1 (Immediate).....
+                    log("GETTING INPUT FROM OUTSIDE -> SUSPENDING AT " + pos + " Last output=" + this.getlastoutpout() + "<--");
+                    return x(pos);
                 }
                 else
                 {
                     BigInteger v = getI();
-                    put(add,v,1); // store is always mode 1 (Immediate).....
+                    put(add,v,1);
                 }
+
             }
             else if (opcode == 4)
             {
@@ -321,8 +309,9 @@ public class mazeDroid
 
     private BigInteger getI()
     {
-        if (getInputFromPaddle)
+        if (gotInputFromOutside)
         {
+            gotInputFromOutside=false;
             return inputs[inputs.length-1];
         }
         if (inputs==null)
@@ -352,7 +341,7 @@ public class mazeDroid
     {
         for (BigInteger i:this.alloutputs)
         {
-            System.out.print(i + " " );
+            System.out.print("=>" + i + "<= "  );
         }
         System.out.println();
     }
@@ -372,6 +361,11 @@ public class mazeDroid
         drawscreen=b;
     }
 
+    boolean gotInputFromOutside = false;
+    public void setInputFromOutside(boolean v)
+    {
+        gotInputFromOutside=v;
+    }
     boolean getInputFromPaddle = false;
     private int getInputFromControls()
     {
