@@ -113,7 +113,7 @@ public class d16
             }
             int x = units(Math.abs(dig));
             out[i]=x;
-            if (i%1000==0) System.out.println(i + " " + in.length + " =" + Math.abs(dig) + " = " + Math.abs(dig)%10);
+            if (i%10000==0) System.out.println(i + " " + in.length + " =" + Math.abs(dig) + " = " + Math.abs(dig)%10);
         }
 
         return out;
