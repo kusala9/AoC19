@@ -1,5 +1,5 @@
 
-public class d16
+public class d16_2
 {
     public static String n(int x,String s)
     {
