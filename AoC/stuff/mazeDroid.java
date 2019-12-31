@@ -216,6 +216,8 @@ public class mazeDroid
                 BigInteger val = get(p1,modes[1]);
                 lastoutput = val;
                 alloutputs.add(val);
+                int v = val.intValue();
+                System.out.print(String.format("%c",v));
                 log("OUTPUT::  ->" + lastoutput + "<-");
             }
             else if (opcode == 5) // jump if true.
@@ -309,11 +311,6 @@ public class mazeDroid
 
     private BigInteger getI()
     {
-        if (gotInputFromOutside)
-        {
-            gotInputFromOutside=false;
-            return inputs[inputs.length-1];
-        }
         if (inputs==null)
         {
             try
@@ -332,7 +329,7 @@ public class mazeDroid
         {
             BigInteger v = inputs[inputpointer];
             inputpointer++;
-            log("Input ==>" + v + "<==");
+            System.out.println("From inputs, Input ==>" + v + "<==");
             return v;
         }
         return new BigInteger("0");
