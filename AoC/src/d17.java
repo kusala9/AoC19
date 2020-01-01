@@ -114,7 +114,7 @@ public class d17
         String A = "R,6,L,10,R,10,R,10";
         String B = "L,10,L,12,R,10";
         String C = "R,6,L,12,L,10";
-        String main = "A,B,A,B,A,C,A,C,A,C";
+        String main = "A,B,A,B,A,C,A,C,B,C";
         String pmpt = "y";
         int []a = fS(A);
         int []b = fS(B);
@@ -150,21 +150,22 @@ public class d17
         //G.dumpAllOutputs();
         ArrayList<BigInteger> ret = G.getAlloutputs();
         int r=0;int c=0;
-        for (int i=0;i<ret.size();i++)
-        {
-            int v = ret.get(i).intValue();
-            System.out.print(String.format("%c",v));
-            switch (v)
-            {
-                case 35: {
-                    //screen[r][c] = 1;
-                    break;
-                }
-                case 10:{r++;c=-1;break;}
-            }
-            c++;
-        }
+//        for (int i=0;i<ret.size();i++)
+//        {
+//            int v = ret.get(i).intValue();
+//            System.out.print(String.format("%c",v));
+//            switch (v)
+//            {
+//                case 35: {
+//                    //screen[r][c] = 1;
+//                    break;
+//                }
+//                case 10:{r++;c=-1;break;}
+//            }
+//            c++;
+//        }
         System.out.println("=================FINISHED======================");
+        System.out.println("LAST CH=" + ret.get(ret.size()-1));
     }
 
 }
