@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Queue;
+import java.util.*;
 
 public class d18
 {
@@ -122,7 +120,7 @@ public class d18
                 steps+=min_dist;
 
                 // we're only interested in steps which are less than the minimum....
-                if (steps>mins) return -1;
+                if (steps>mins) return 0;
                 //System.out.println("Total Steps=" + steps);
                 //pr(mat,i,j);
             }
@@ -178,26 +176,17 @@ public class d18
 
         //System.exit(0);
         String []inp = new String []{};
-        doR(inp,mz,oy,ox,keys,doors);
+        doR(inp,mz,oy,ox,keys.keySet(),keys,doors);
     }
 
-    public static void doR(String []bi,int [][]mz,int oy,int ox,HashMap<String,pear<Integer,Integer>> keys, HashMap<String,pear<Integer,Integer>> doors)
+    public static void doR(String []bi,int [][]mz,int oy,int ox,Set<String> ktt,HashMap<String,pear<Integer,Integer>> keys, HashMap<String,pear<Integer,Integer>> doors)
     {
         String []inp;
-        if (bi.length==26) return;
-        for (String s:keys.keySet())
+        if (ktt.size()==0) return;
+        for (String s:ktt)
         {
-            boolean add=true;
-            for (int ind=0;ind<bi.length;ind++)
-            {
-                if (bi[ind].compareTo(s)==0) add=false;
-            }
-
-            if (add==false)
-            {
-                //System.out.println("Skipping " + s);
-                continue;
-            }
+            Set<String> ns = new HashSet<String>(ktt);
+            ns.remove(s);
 
             pear<Integer,Integer> d = new pear<Integer,Integer>(0,0);
             pear<Integer,Integer> k = keys.get(s);
@@ -208,16 +197,19 @@ public class d18
             inp = new String [len];
             for (int ind=0;ind<bi.length;ind++) inp[ind]=bi[ind];
             inp[bi.length]=s;
+
             int st = BFS2(inp,mz,oy,ox,keys,doors);
+
             if (st>0)
             {
-                if (st<mins && bi.length==25)
+                if (st<mins && inp.length==26)
                 {
                     mins=st;
                     minss=mkX(inp);
+                    System.out.println("NEWMIN=" + mins + " s=" + minss);
                 }
-                System.out.println(bi.length  + ": key=" + mkX(inp) + " x=" + k.first + " y=" + k.second + " dx=" + d.first + " dy=" + d.second + " steps=" + st + " min=" + mins + ":" + minss);
-                doR(inp,mz,oy,ox,keys,doors);
+                System.out.println(bi.length + ":" + ktt.size() + " Processed key(s)=" + mkX(inp) + " steps=" + st + " min=" + mins + ":" + minss);
+                doR(inp,mz,oy,ox,ns,keys,doors);
             }
             else
             {
@@ -226,7 +218,8 @@ public class d18
         }
     }
 
-    public static int mins = Integer.MAX_VALUE;
+    public static int mins = 6000;   // my best estimate (earlier try)....
+
     public static String minss = "";
 
     public static String mkX(String []v)
