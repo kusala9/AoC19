@@ -320,16 +320,60 @@ public class d18
         HashSet<String> withnone = new HashSet<>();
         HashSet<String> withall = new HashSet<String> (keys.keySet());
         HashSet<String> withsome = new HashSet<String> ();
-        withsome.add("r");
-        withsome.add("h");
-        for (String s:keys.keySet())
+
+        int nsteps=0;
+        String st="@";
+        String nx="";
+        StringBuilder sb= new StringBuilder();
+        while (withall.size()>0)
         {
-            for (String t:keys.keySet())
+            withall.remove(st);
+            int min= Integer.MAX_VALUE;
+            nx="";
+            for (String t:withall)
             {
-                pear<Integer, ArrayList<String>> st2 = BFS4(s, t, mz, keys, withsome);
-                if (st2.first>0) System.out.println("from " + s + "  to  " + t + " = " + st2.first + " via (" + mkX(st2.second) + ")");
+                pear<Integer, ArrayList<String>> st2 = BFS4(st, t, mz, keys, withsome);
+                if (st2.first>0)
+                {
+                    System.out.println("from " + st + "  to  " + t + " = " + st2.first + " with " + mkX(withsome) +  " via (" + mkX(st2.second) + ")");
+                    if (st2.first<min)
+                    {
+                        min=st2.first;
+                        nx=t;
+                    }
+                }
             }
+            if (withall.contains(nx))
+            {
+                st=nx;
+                nsteps+=min;
+                System.out.println("Selecting " + nx + " (" + min + ") path= " + sb.toString() + " n=" + nsteps);
+                sb.append(nx);
+                withsome.add(nx);
+            }
+            else break;
         }
+
+        //        withsome.add("r");
+//        withsome.add("h");
+//        for (String s:keys.keySet())
+//        {
+//            for (String t:keys.keySet())
+//            {
+//                pear<Integer, ArrayList<String>> st2 = BFS4(s, t, mz, keys, withsome);
+//                if (st2.first>0) System.out.println("from " + s + "  to  " + t + " = " + st2.first + " via (" + mkX(st2.second) + ")");
+//            }
+//        }
+    }
+
+    public static String mkX(HashSet<String> v)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (String s:v)
+        {
+            sb.append(s);
+        }
+        return sb.toString();
     }
 
     public static String mkX(ArrayList<String> v)
