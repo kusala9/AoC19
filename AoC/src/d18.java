@@ -20,15 +20,133 @@ public class d18
     private static final int row[] = { -1, 0, 0, 1 };
     private static final int col[] = { 0, -1, 1, 0 };
 
+    private static boolean isValid2(int[][] mat, boolean[][] visited, int row, int col, HashSet<String> with)
+    {
+        //System.out.println("IV: " + row + "," + col + " locn=" + mat[row][col] + " v=" + visited[row][col]);
+        if (mat[row][col] >= 'A' && mat[row][col] <= 'Z')
+        {
+            String dr = Character.toString(mat[row][col]).toLowerCase();
+            if (with.contains(dr))
+            {
+                return (row >= 0) && (row < 100) &&
+                    (col >= 0) && (col < 100)
+                    && !visited[row][col];
+            }
+            else return false;
+        }
+        else
+        {
+            return (row >= 0) && (row < 100) &&
+                    (col >= 0) && (col < 100)
+                    && (mat[row][col] == '.')
+                    && !visited[row][col];
+        }
+    }
+
     private static boolean isValid(int mat[][], boolean visited[][],int row, int col)
     {
         //System.out.println("IV: " + row + "," + col + " locn=" + mat[row][col] + " v=" + visited[row][col]);
         return (row >= 0) && (row < 100) &&
                 (col >= 0) && (col < 100)
-                && mat[row][col] == '.'
+                && (mat[row][col] == '.')
                 && !visited[row][col];
     }
     public static int nr=0;
+
+    private static pear<Integer,ArrayList<String>> BFS4(String from,String to, int mat[][],HashMap<String,pear<Integer,Integer>> keys,HashSet<String> with)
+    {
+        pear<Integer,ArrayList<String>> ret = new pear<>(0,new ArrayList<String>());
+        if (from.compareTo(to)==0) return ret;
+        // construct a matrix to keep track of visited cells
+        boolean[][] visited = new boolean[100][100];
+        int steps = 0;
+
+        // create an empty queue
+        Queue<nd> q = new ArrayDeque<>();
+
+        // get dest..
+        pear<Integer,Integer> fm = keys.get(from);
+        int i=fm.second;
+        int j=fm.first;
+        pear<Integer,Integer> dest = keys.get(to);
+        int x=dest.second;
+        int y=dest.first;
+
+        //System.out.println("BFS4: Going from " + i + "," + j + " to " + x +"," + y + "=" + fd) ;
+
+        // mark source cell as visited and enqueue the source node
+        visited[i][j] = true;
+        q.add(new nd(i, j, 0));
+
+        // stores length of longest path from source to destination
+        int min_dist = Integer.MAX_VALUE;
+
+        // run till queue is not empty
+        while (!q.isEmpty())
+        {
+            // pop front node from queue and process it
+            nd node = q.poll();
+
+            // (i, j) represents current cell and dist stores its
+            // minimum distance from the source
+            i = node.x;
+            j = node.y;
+            int dist = node.dist;
+
+            // if destination is found, update min_dist and stop
+            if (i == x && j == y)
+            {
+                min_dist = dist;
+                break;
+            }
+
+            // check for all 4 possible movements from current cell
+            // and enqueue each valid movement
+            for (int k = 0; k < 4; k++)
+            {
+                // check if it is possible to go to position
+                // (i + row[k], j + col[k]) from current position
+                if (isValid2(mat, visited, i + row[k], j + col[k],with))
+                {
+                    // mark next cell as visited and enqueue it
+                    int ni=i+row[k];
+                    int nj=j+col[k];
+                    //System.out.println("at -> " + ni + "," + nj + " dist=" + dist );
+                    visited[i + row[k]][j + col[k]] = true;
+                    if (mat[ni][nj]>='A' && mat[ni][nj]<='Z')
+                    {
+                        String dx = Character.toString(mat[ni][nj]);
+                        ret.second.add(dx);
+                        //System.out.println("Door-> " + dx);
+                    }
+                    q.add(new nd(i + row[k], j + col[k], dist + 1) );
+                }
+                else
+                {
+                    int ni=i+row[k];
+                    int nj=j+col[k];
+                    //System.out.println("No path to " + ni + "," + nj + " from " + i + "," + j);
+                }
+            }
+        }
+
+        if (min_dist != Integer.MAX_VALUE)
+        {
+            //System.out.println("Shortest path = " + min_dist);
+            steps+=min_dist;
+        }
+        else
+        {
+            //System.out.println("(" + x + "," + y + ") Can't be reached from source");
+            ret.first=-1;
+            return ret;
+            //System.exit(1);
+        }
+
+        ret.first = steps;
+        return ret;
+    }
+
     private static int BFS2(String []s,int mat[][], int i, int j,HashMap<String,pear<Integer,Integer>> keys,HashMap<String,pear<Integer,Integer>> doors)
     {
         // construct a matrix to keep track of visited cells
@@ -156,7 +274,14 @@ public class d18
                     mz[r][i] = ch;
                     switch (ch)
                     {
-                        case '@':{ox=i;oy=r;mz[r][i] = '.';break;}
+                        case '@':{
+                            ox=i;
+                            oy=r;
+                            mz[r][i] = '.';
+                            String s = Character.toString(ch);
+                            keys.put(s,new pear<>(i,r));
+                            break;
+                        }
                         case '#':{break;}
                         case '.':{break;}
                         default:{
@@ -174,9 +299,47 @@ public class d18
         }catch (Exception e){e.printStackTrace();}
         System.out.println("dun ix=" + ox + " oy=" + oy + " nkeys=" + keys.keySet().size());
 
-        //System.exit(0);
-        String []inp = new String []{};
-        doR(inp,mz,oy,ox,keys.keySet(),keys,doors);
+
+
+        //
+//        String from="@";
+//        String to="r";
+//        pear<Integer, ArrayList<String>> st2 = BFS4(from, to, mz, keys, withall);
+//        System.out.println("from " + from + " to " + to + " = " + st2.first + " via (" + mkX(st2.second) + ")");
+
+//        for (String to:keys.keySet())
+//        {
+//            pear<Integer, ArrayList<String>> st2 = BFS4(from, to, mz, keys, withall);
+//            System.out.println("from " + from + " to " + to + " = " + st2.first + " via (" + mkX(st2.second) + ")");
+//        }
+//
+//        ArrayList<String> in = new ArrayList<String>();
+//        ArrayList<String> i2 = new ArrayList<String>();
+//
+
+        HashSet<String> withnone = new HashSet<>();
+        HashSet<String> withall = new HashSet<String> (keys.keySet());
+        HashSet<String> withsome = new HashSet<String> ();
+        withsome.add("r");
+        withsome.add("h");
+        for (String s:keys.keySet())
+        {
+            for (String t:keys.keySet())
+            {
+                pear<Integer, ArrayList<String>> st2 = BFS4(s, t, mz, keys, withsome);
+                if (st2.first>0) System.out.println("from " + s + "  to  " + t + " = " + st2.first + " via (" + mkX(st2.second) + ")");
+            }
+        }
+    }
+
+    public static String mkX(ArrayList<String> v)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (String s:v)
+        {
+            sb.append(s);
+        }
+        return sb.toString();
     }
 
     public static void doR(String []bi,int [][]mz,int oy,int ox,Set<String> ktt,HashMap<String,pear<Integer,Integer>> keys, HashMap<String,pear<Integer,Integer>> doors)
