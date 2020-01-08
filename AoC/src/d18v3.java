@@ -310,6 +310,7 @@ public class d18v3
                     }
                 }
             }
+            
             //if (!fnd) System.out.println(ns(lev) + i + " no reachable keys");
             cache.put(ck,res);
         }
