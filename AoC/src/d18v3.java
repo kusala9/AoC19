@@ -42,15 +42,6 @@ public class d18v3
         }
     }
 
-    private static boolean isValid(int mat[][], boolean visited[][],int row, int col)
-    {
-        //System.out.println("IV: " + row + "," + col + " locn=" + mat[row][col] + " v=" + visited[row][col]);
-        return (row >= 0) && (row < 100) &&
-                (col >= 0) && (col < 100)
-                && (mat[row][col] == '.')
-                && !visited[row][col];
-    }
-
     public static int nr=0;
 
     private static pear<Integer,ArrayList<String>> BFS4(String from,String to, int mat[][],HashMap<String,pear<Integer,Integer>> keys,HashSet<String> with,boolean trace)
@@ -222,33 +213,6 @@ public class d18v3
         return sb.toString();
     }
 
-    public static String mkX(String k,ArrayList<String> v)
-    {
-        StringBuilder sb = new StringBuilder(k);
-        for (String s:v) sb.append(s);
-        return sb.toString();
-    }
-    /*
-    from reddit....
-
-    distanceToCollectKeys(currentKey, keys, cache):
-
-    if keys is empty:
-        return 0
-
-    cacheKey := (currentKey, keys)
-    if cache contains cacheKey:
-        return cache[cacheKey]
-
-    result := infinity
-    foreach key in reachable(keys):
-       d := distance(currentKey, key) + distanceToCollectKeys(key, keys - key, cache)
-       result := min(result, d)
-
-    cache[cacheKey] := result
-    return result
-
-     */
     public static HashMap<String,Integer> mp = new HashMap<>();
 
     public static int dor5(int lev,
@@ -310,8 +274,7 @@ public class d18v3
                     }
                 }
             }
-            
-            //if (!fnd) System.out.println(ns(lev) + i + " no reachable keys");
+
             cache.put(ck,res);
         }
         return res;
@@ -322,56 +285,6 @@ public class d18v3
         for (int i=0;i<2*n;i++) sb.append(" ");
         return sb.toString();
     }
-//
-//    public static int dor4(int lev,String startfrom,
-//                           HashSet<String> remainingkeys,
-//                           HashSet<String> gotKeys,
-//                           int[][]mz,
-//                           HashMap<String,pear<Integer,Integer>> allkeys,
-//                           HashMap<String,Integer> cache,
-//                           String path)
-//    {
-//        int thresh=4;
-//        if (lev<thresh) System.out.println("DOR4: " + lev + ":" + startfrom + ": search for " + mkX(remainingkeys) + ": using " + mkX(gotKeys) + " path=" + path);
-//
-//        if (remainingkeys.size()==0) return 0;
-//
-//        int res=1000000;
-//
-//        ArrayList<String> ks = new ArrayList(new TreeSet(gotKeys));
-//        String ck = startfrom + "," + mkX(ks);
-//        if (cache.containsKey(ck))
-//        {
-//            return cache.get(ck);
-//        }
-//
-//        boolean fnd=false;
-//        for (String t:remainingkeys)
-//        {
-//            HashSet<String> ns = new HashSet<>(remainingkeys);
-//            HashSet<String> ng = new HashSet<>(gotKeys);
-//            ns.remove(startfrom);
-//            ns.remove(t);
-//            ng.add(startfrom);
-//            ng.add(t);
-//            pear<Integer, ArrayList<String>> st2 = BFS4(startfrom, t, mz, allkeys, gotKeys,false);
-//            if (st2.first>0)
-//            {
-//                if (lev<thresh) System.out.println(lev + ": REACHABLE: from " + startfrom + "  to  " + t + " = " + st2.first + " with " + mkX(gotKeys) +  " via (" + mkX(st2.second) + ")");
-//                fnd=true;
-//                int d = st2.first + dor4(lev+1,t,ns,ng,mz,allkeys,cache,path+startfrom);
-//                if (d < res)
-//                {
-//                    res=d;
-//                    mp.put(t,d);
-//                }
-//            }
-//        }
-//        cache.put(ck,res);
-//        return res;
-//    }
-
-
 
     public static String mkX(HashSet<String> v)
     {
@@ -392,12 +305,7 @@ public class d18v3
         }
         return sb.toString();
     }
-
-
-    public static int mins = 6000;   // my best estimate (earlier try)....
-
-    public static String minss = "";
-
+    
     public static String mkX(String []v)
     {
         String ret = "";
