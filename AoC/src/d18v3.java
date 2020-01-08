@@ -64,6 +64,10 @@ public class d18v3
         Queue<nd> q = new ArrayDeque<>();
 
         // get dest..
+        if (!keys.containsKey(from) || !keys.containsKey(to))
+        {
+            System.out.println("ERROR: Can't find key. Currently have " + keys.keySet() + " Searching for " + from + "," + to );
+        }
         pear<Integer,Integer> fm = keys.get(from);
         int i=fm.second;
         int j=fm.first;
@@ -148,8 +152,10 @@ public class d18v3
         HashMap<String,pear<Integer,Integer>> doors = new HashMap<>();
 
         System.out.println("hw");
-        File file = new File("d18_mz.txt");
-        int ox=0,oy=0;
+        File file = new File("d18_mz_pt2.txt");
+        int []ox = new int[4];
+        int []oy = new int[4];
+        int oc=0;
         try (BufferedReader br = new BufferedReader(new FileReader(file)))
         {
             String line;
@@ -165,10 +171,10 @@ public class d18v3
                     switch (ch)
                     {
                         case '@':{
-                            ox=i;
-                            oy=r;
+                            String s = Integer.toString(oc);
+                            ox[oc]=i;
+                            oy[oc++]=r;
                             mz[r][i] = '.';
-                            String s = Character.toString(ch);
                             keys.put(s,new pear<>(i,r));
                             break;
                         }
@@ -187,16 +193,33 @@ public class d18v3
                 r++;
             }
         }catch (Exception e){e.printStackTrace();}
-        System.out.println("dun ix=" + ox + " oy=" + oy + " nkeys=" + keys.keySet().size());
+        System.out.println("dun ix=" + mkX(ox) + " oy=" + mkX(oy) + " nkeys=" + keys.keySet().size());
+
         HashSet<String> withall = new HashSet<String> (keys.keySet());
+        HashSet<String> gotK = new HashSet<>();
+        String []srcs = new String[4];
+        for (int i=0;i<ox.length;i++)
+        {
+            String c = Integer.toString(i);
+            srcs[i] = c;
+            gotK.add(c);
+            withall.remove(c);
+        }
         HashMap<String,Integer> cache = new HashMap<String,Integer>();
         withall.remove("@");
-        int m = dor4(0,"@",withall,new HashSet<>(),mz,keys,cache,"");
+        int m = dor5(0,srcs,withall,gotK,mz,keys,cache,"");
         System.out.println ("=> "+ m);
         for (String s:mp.keySet())
         {
             System.out.println (s + "=" + mp.get(s));
         }
+    }
+
+    public static String mkX(int []v)
+    {
+        StringBuilder sb = new StringBuilder("");
+        for (int s:v) sb.append(s + " " );
+        return sb.toString();
     }
 
     public static String mkX(String k,ArrayList<String> v)
@@ -228,7 +251,8 @@ public class d18v3
      */
     public static HashMap<String,Integer> mp = new HashMap<>();
 
-    public static int dor4(int lev,String startfrom,
+    public static int dor5(int lev,
+                           String []srcs,
                            HashSet<String> remainingkeys,
                            HashSet<String> gotKeys,
                            int[][]mz,
@@ -236,45 +260,115 @@ public class d18v3
                            HashMap<String,Integer> cache,
                            String path)
     {
-        int thresh=4;
-        if (lev<thresh) System.out.println("DOR4: " + lev + ":" + startfrom + ": search for " + mkX(remainingkeys) + ": using " + mkX(gotKeys) + " path=" + path);
+        int thresh=10;
+        if (lev<thresh) System.out.println(ns(lev) + "DOR5: " + lev + ":(" + mkX(srcs)  + "): search for " + mkX(remainingkeys) + ": using " + mkX(gotKeys) + " path=" + path);
+
 
         if (remainingkeys.size()==0) return 0;
 
-        int res=Integer.MAX_VALUE;
+        int res=1000000;
 
         ArrayList<String> ks = new ArrayList(new TreeSet(gotKeys));
-        String ck = startfrom + "," + mkX(ks);
+        String ck = mkX(srcs) + "," + mkX(ks);
         if (cache.containsKey(ck))
         {
+            //System.out.println(ns(lev) + "CACHED=>" + ck + "=" + cache.get(ck));
             return cache.get(ck);
         }
 
-        boolean fnd=false;
-        for (String t:remainingkeys)
+        for (int i=0;i<srcs.length;i++)
         {
-            HashSet<String> ns = new HashSet<>(remainingkeys);
-            HashSet<String> ng = new HashSet<>(gotKeys);
-            ns.remove(startfrom);
-            ns.remove(t);
-            ng.add(startfrom);
-            ng.add(t);
-            pear<Integer, ArrayList<String>> st2 = BFS4(startfrom, t, mz, allkeys, gotKeys,false);
-            if (st2.first>0)
+            //System.out.println(lev + "Processing Source -> " + i + "=" + srcs[i] + " (" + mkX(remainingkeys) + ")");
+            String startfrom=srcs[i];
+
+
+            boolean fnd=false;
+            for (String t:remainingkeys)
             {
-                if (lev<thresh) System.out.println(lev + ": REACHABLE: from " + startfrom + "  to  " + t + " = " + st2.first + " with " + mkX(gotKeys) +  " via (" + mkX(st2.second) + ")");
-                fnd=true;
-                int d = st2.first + dor4(lev+1,t,ns,ng,mz,allkeys,cache,path+startfrom);
-                if (d < res)
+                HashSet<String> ns = new HashSet<>(remainingkeys);
+                HashSet<String> ng = new HashSet<>(gotKeys);
+                ns.remove(startfrom);
+                ns.remove(t);
+                ng.add(startfrom);
+                ng.add(t);
+
+                String []nsrcs = new String[srcs.length];
+                for (int j=0;j<nsrcs.length;j++) nsrcs[j]=srcs[j];
+                nsrcs[i]=t;
+
+                pear<Integer, ArrayList<String>> st2 = BFS4(startfrom, t, mz, allkeys, gotKeys,false);
+
+                if (st2.first>0)
                 {
-                    res=d;
-                    mp.put(t,d);
+                    if (lev<thresh) System.out.println(ns(lev) + lev + ": " + i + ": REACHABLE: from " + startfrom + "  to  " + t + " = " + st2.first + " with " + mkX(gotKeys) +  " via (" + mkX(st2.second) + ")");
+                    fnd=true;
+                    int d = st2.first + dor5(lev+1,nsrcs,ns,ng,mz,allkeys,cache,path+startfrom);
+                    if (d < res)
+                    {
+                        res=d;
+                        mp.put(t,d);
+                    }
                 }
             }
+            //if (!fnd) System.out.println(ns(lev) + i + " no reachable keys");
+            cache.put(ck,res);
         }
-        cache.put(ck,res);
         return res;
     }
+    public static String ns(int n)
+    {
+        StringBuilder sb=new StringBuilder();
+        for (int i=0;i<2*n;i++) sb.append(" ");
+        return sb.toString();
+    }
+//
+//    public static int dor4(int lev,String startfrom,
+//                           HashSet<String> remainingkeys,
+//                           HashSet<String> gotKeys,
+//                           int[][]mz,
+//                           HashMap<String,pear<Integer,Integer>> allkeys,
+//                           HashMap<String,Integer> cache,
+//                           String path)
+//    {
+//        int thresh=4;
+//        if (lev<thresh) System.out.println("DOR4: " + lev + ":" + startfrom + ": search for " + mkX(remainingkeys) + ": using " + mkX(gotKeys) + " path=" + path);
+//
+//        if (remainingkeys.size()==0) return 0;
+//
+//        int res=1000000;
+//
+//        ArrayList<String> ks = new ArrayList(new TreeSet(gotKeys));
+//        String ck = startfrom + "," + mkX(ks);
+//        if (cache.containsKey(ck))
+//        {
+//            return cache.get(ck);
+//        }
+//
+//        boolean fnd=false;
+//        for (String t:remainingkeys)
+//        {
+//            HashSet<String> ns = new HashSet<>(remainingkeys);
+//            HashSet<String> ng = new HashSet<>(gotKeys);
+//            ns.remove(startfrom);
+//            ns.remove(t);
+//            ng.add(startfrom);
+//            ng.add(t);
+//            pear<Integer, ArrayList<String>> st2 = BFS4(startfrom, t, mz, allkeys, gotKeys,false);
+//            if (st2.first>0)
+//            {
+//                if (lev<thresh) System.out.println(lev + ": REACHABLE: from " + startfrom + "  to  " + t + " = " + st2.first + " with " + mkX(gotKeys) +  " via (" + mkX(st2.second) + ")");
+//                fnd=true;
+//                int d = st2.first + dor4(lev+1,t,ns,ng,mz,allkeys,cache,path+startfrom);
+//                if (d < res)
+//                {
+//                    res=d;
+//                    mp.put(t,d);
+//                }
+//            }
+//        }
+//        cache.put(ck,res);
+//        return res;
+//    }
 
 
 
